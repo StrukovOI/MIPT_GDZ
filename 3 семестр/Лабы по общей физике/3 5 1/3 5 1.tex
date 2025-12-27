@@ -1,0 +1,333 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\usepackage{geometry}
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % стандартный набор AMS-пакетов для математ. текстов
+\usepackage{mathtext}
+\usepackage[utf8]{inputenc} % кодировка utf8
+\usepackage[russian]{babel} % русский язык
+\usepackage[pdftex,dvipsnames]{xcolor} % работа с цветами
+% \usepackage[pdftex]{graphicx} % графика (картинки)
+% \usepackage{tikz,pgfplots} % рисунки
+\usepackage{indentfirst}
+% \usepackage[labelfont=bf,labelsep=endash,skip=3pt]{caption} % подпись картинок
+\usepackage{fancyhdr,pageslts} % настройка колонтитулов
+\usepackage{enumitem} % работа со списками
+\usepackage{floatrow,multicol,multirow,longtable,hhline} % работа с таблицами
+\usepackage{float,wrapfig} % плавающие объекты
+\usepackage{tcolorbox} % рамка вокруг текста
+%\usepackage[calc]{datetime2} % дата
+\usepackage{bm} % жирное начертание в формулах
+\usepackage{physics} % физический пакет
+\DeclareMathAlphabet\mathbfcal{OMS}{cmsy}{b}{n}
+\usepackage{pgfornament} % красивые рюшечки и вензеля
+\usepackage{mdframed}
+\usepackage{derivative}
+\usepackage{mathrsfs} %EDS
+\usepackage{soul} % strikethorugh
+%\usepackage{boondox-cal}
+
+% ----------------------------------------
+% Настройка шрифта
+
+% Просто закооментируйте следующую строчку, если не работает. Будет другой шрифт, правда :(
+% \usepackage{pscyr}
+
+% ----------------------------------------
+% Стилевые настройки
+
+\usepackage{boldline} % жирная линия после таблиц (чтобы не было ошибок, этот пакет должен подключаться именно тут!)
+\floatsetup[table]{style=Plaintop,floatrowsep=qquad} % настройка оформления таблиц
+\setlist[enumerate,itemize]{leftmargin=5mm,itemindent=10mm,itemsep=0mm,
+listparindent=0em,labelsep=2mm,topsep=2mm,labelwidth=4mm} % настройки списков
+
+\setlength{\columnsep}{0.5cm} % расстояние между колонками
+\setlength{\parskip}{1pt} % расстояние до текста от колонтитула
+
+%\usepackage{titlesec} % управление оформлением section
+%\renewcommand{\thesection}{\Roman{section}}
+%\titleformat{\section}[block]{\bfseries\large}{\thesection.}{5pt}{}
+
+% ----------------------------------------
+% Настройки полей
+\geometry{
+	left=10mm,
+	top=10mm,
+	right=10mm,
+	bottom=15mm,
+	marginparsep=0mm,
+	marginparwidth=0mm,
+	headheight=0pt,
+	headsep=0pt,
+	footskip=20pt}
+
+% ----------------------------------------
+% Настройки колонтитулов и нумерации страниц
+\pagenumbering{arabic}
+
+
+
+\newcounter{ntask}
+\setcounter{ntask}{0}
+
+
+\newcommand{\arsh}{\mathrm{arsh} \,\,}
+\newcommand{\arch}{\mathrm{arch} \,\,}
+\newcommand{\arth}{\mathrm{arth} \,\,}
+\newcommand{\arcth}{\mathrm{arcth} \,\,}
+\renewcommand{\Re}{\operatorname{Re} \,}
+\newcommand{\EDS}{\mathscr{E}}
+\newcommand{\diffract}[1]{\frac{\mathrm{d}#1}{\mathrm{d}t}}
+
+\begin{document}
+\title{\begin{center}Лабораторная работа № 3.5.1\end{center}
+Изучение плазмы газового разряда в неоне}
+\author{Струков О. И. \\ Б04-404}
+\date{}
+
+\thispagestyle{empty}
+\pagenumbering{gobble}
+\maketitle
+\newpage
+\pagenumbering{arabic}
+
+ 
+\textbf{Цель работы:} Изучение вольт-амперной характеристики тлеющего разряда, изучение свойств плазмы методом зондовых характеристик.
+
+\textbf{В работе используются:} Стеклянная газоразрядная трубка, наполненная изотопом неона, высоковольтный источник питания (ВИП), источник питания постоянного тока, делитель напряжения, резистор, потенциометр, амперметры, вольтметры, переключатели.
+
+
+
+\section*{Теоретическая часть}
+\subsection*{Плазма}
+Плазма газового разряда — это частично ионизированный газ, образующийся при прохождении электрического тока через газовую среду.
+В ионизированном газе поле ионов экранируется электронами. Для поля $\mathbf{E}$ и плотности заряда $\rho$:
+$$
+\text{div}~\mathbf{E} = 4\pi \rho,
+$$
+а с учётом сферической симметрии:
+\begin{equation}
+\dfrac{d^2 \varphi}{dr^2}+\dfrac{2}{r}\dfrac{d\varphi}{dr}=-4\pi \rho.
+\end{equation}
+Плотности заряда электронов и ионов:
+\begin{equation}
+\begin{array}{c}
+\rho_e = -ne \cdot \exp\left(\dfrac{e\varphi}{kT_e}\right),\\
+\rho_i = ne.
+\end{array}
+\end{equation}
+В приближении $\dfrac{e\varphi}{kT_e} \ll 1$ получим
+\begin{equation}
+\varphi = \dfrac{Ze}{r}e^{-r/r_D},
+\end{equation}
+где $r_D = \sqrt{\dfrac{kT_e}{4\pi n e^2}}$ -- \textit{радиус Дебая}. Число ионов в сфере такого радиуса:
+\begin{equation}
+N_D = \dfrac{4}{3}\pi r_D^3 n.
+\end{equation}
+
+Смещение электронов на $x$ создаёт поле, вызывающее колебания:
+$$
+\dfrac{d^2x}{dt^2}=-\dfrac{n e^2}{m}x.
+$$ 
+Отсюда \textit{плазменная частота}:
+\begin{equation}
+\omega_p = \sqrt{\dfrac{4\pi ne^2}{m}}.
+\end{equation}
+
+\subsection*{Одиночный зонд}
+При внесении в плазму зонда на него поступают токи:
+\begin{equation}
+\begin{array}{c}
+I_{e0} = \dfrac{n \langle v_e \rangle}{4}eS,\\
+I_{i0} = \dfrac{n \langle v_i \rangle}{4}eS.
+\end{array}
+\end{equation}
+Скорости электронов много больше, поэтому $I_{i0} \ll I_{e0}$. Зонд заряжается до плавающего потенциала $-U_f$.
+
+\begin{wrapfigure}{r}{5.5cm}
+    \centering
+    \includegraphics[scale=0.5]{3.png}
+\end{wrapfigure}
+Электронный ток:
+$$
+I_e = I_0 \exp\left( -\dfrac{eU_f}{kT_e} \right).
+$$
+При подаче на зонд потенциала $U_\text{з}$ измеряют ток $I_\text{з}$. Максимальный ток $I_{e\text{н}}$ -- электронный ток насыщения, минимальный $I_{i\text{н}}$ -- ионный. По формуле Бома:
+\begin{equation}
+I_{i\text{н}} = 0,4 neS \sqrt{\dfrac{2kT_e}{m_i}}.
+\end{equation}
+
+\subsection*{Двойной зонд}
+Двойной зонд -- два одинаковых зонда с разностью потенциалов меньше $U_f$. При малых токах ионные токи компенсируются. Для потенциалов:
+$$
+U_1 = -U_f + \Delta U_1, \quad U_2 = -U_f + \Delta U_2.
+$$
+Токи через зонды:
+\begin{equation}
+I_1 = I_{i\text{н}}\left(1 - \exp\left( \dfrac{e\Delta U_1}{kT_e} \right)\right),
+\quad
+I_2 = I_{i\text{н}}\left(1 - \exp\left( \dfrac{e\Delta U_2}{kT_e} \right)\right).
+\end{equation}
+При $I_1 = -I_2 = I$ получаем:
+\begin{equation}
+U = \dfrac{kT_e}{e}\ln\dfrac{1 - I/I_{i\text{н}}}{1 + I/I_{i\text{н}}}, 
+\quad
+I = I_{i\text{н}} \text{th}\dfrac{eU}{2kT_e}.
+\end{equation}
+Реальная зависимость:
+\begin{equation}
+I = I_{i\text{н}} \text{th}\dfrac{eU}{2kT_e} + AU.
+\end{equation}
+
+\section*{Экспериментальная установка}
+\begin{center}
+\includegraphics[scale=0.6]{1.png}
+\end{center}
+Газоразрядная трубка с холодным катодом наполнена неоном при давлении 2 мм рт. ст. Катод и анод подключаются через балластный резистор $R_\text{б} \approx 450$ кОм к ВИП (до 5 кВ). Ток разряда измеряется миллиамперметром $A_1$, напряжение на трубке -- вольтметром $V_1$ через делитель с коэффициентом 10.% С учётом сопротивления вольтметра $R_V = 10~\mathrm{M\Omega}$, показания занижены в $\alpha = 12.3$ раза.
+
+При подключении к аноду-II разряд возникает в области с двойным зондом. Зонды из молибденовой проволоки ($d=0,2$ мм, $l=5,2$ мм) подключены к источнику питания через потенциометр. Напряжение измеряется вольтметром $V_2$, ток -- мультиметром $A_2$.
+
+
+
+\section*{Ход работы}
+\subsection*{Вольт-амперная характеристика разряда}
+\begin{enumerate}
+	\item После ознакомления с теорией и установкой было определено напряжение зажигания разряда при плавном увеличении напряжения ВИП, которое составило $U_{\text{заж}} \approx 150$ В.
+	\item После этого с помощью вольтметра 1 и амперметра 1 была снята ВАХ разряда, которая представлена на графике:
+	\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{ВАХ.PDF}
+    \caption{Вольт-амперная характеристика разряда с погрешностями}
+\end{figure}
+	\item По минимальному углу наклона участка кривой, соответствующего поднормальному тлеющему газовому разряду, определено максимальное дифференциальное сопротивление разряда $R_{\text{}} = (2,1 \pm 0,3)$ кОм.
+
+\end{enumerate}
+	\newpage
+
+\subsection*{Зондовые характеристики}
+\begin{enumerate}
+	\item С помощью мультиметров $A_2$ и $V_2$ были сняты ВАХ двойного зонда при фиксированных силах тока разряда 5,167 мА, 3,048 мА и 1,672 мА.
+	По полученым зависимостям были построены графики зависимости $I(U)$, а также определены токи насыщения $I_{\text{iн}}$ из пересечений асимптоты к току насыщения с осью $U = 0$.
+	\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{5.PDF}
+    \caption{ВАХ зонда при токе разряда $I_{\text{р}} = 5,167$ мА}
+\end{figure}
+
+	\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{3.PDF}
+    \caption{ВАХ зонда при токе разряда $I_{\text{р}} = 3,048$ мА}
+\end{figure}
+
+	\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{1,5.PDF}
+    \caption{ВАХ зонда при токе разряда $I_{\text{р}} = 1,672$ мА}
+\end{figure}
+
+\item Для каждой зависимости были дополнительно определены $\dfrac{dI}{dU} \Big|_{U=0}$ -- наклоны характеристик в начале координат.
+По полученым значениям с помощью следующей формулы была определена температура электронов в каждом случае:
+
+\[ kT_e = \dfrac{1}{2} \dfrac{eI_{\text{iн}}}{ \frac{dI}{dU} \Big|_{U=0}} \]
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$I_p$, мА & $I_{\text{iн}}$, мкА & $\frac{dI}{dU} |_{U=0}$, мкА/В & $T_e$, $10^3$ К & $kT_e$, эВ \\ \hline
+5,167   & $15,9\pm 0,7$ & $5,15\pm 0,03$ & $17,90\pm 0,79$ & $1,54\pm 0,07$ \\ \hline
+3,048   & $10,2\pm 0,3$ & $2,85\pm 0,02$ & $20,75\pm 0,53$ & $1,79\pm 0,05$ \\ \hline
+1,672   & $6,1\pm 0,1$  & $1,58\pm 0,01$ & $22,38\pm 0,49$ & $1,93\pm0,04 $ \\ \hline
+\end{tabular}
+\end{table}
+
+\item Из точек пересечения горизонталей, проведённых из точек пересечения асимптот к току насыщения с осью $U = 0$, с кривой зависимости были определены значения $\Delta U$, с помощью которых были определены энергии и температуры электронов:
+\[ kT_e = \dfrac{\Delta U}{2} \quad (\text{эВ})\]
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+$I_p$, мА & $\Delta U$, В & $kT_e$, эВ & $T_e$, $10^3$ К \\ \hline
+5,167   & $4,95\pm 0,21$ & $2,48\pm 0,11$ & $28,78\pm 1,28$ \\ \hline
+3,048   & $5,54\pm 0,16$ & $2,77\pm 0,08$ & $32,14\pm 0,93$ \\ \hline
+1,672   & $5,66\pm 0,09$  & $2,83\pm 0,05$ & $32,84\pm 0,58$ \\ \hline
+\end{tabular}
+\end{table}
+
+\item Все три зондовые характеристики были изображены на одном графике:
+	\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ВАХ общая.PDF}
+    \caption{ВАХ двойного зонда для трёх рассматриваемых токов разряда}
+\end{figure}
+
+\item По формуле Бома была рассчитана концентрация электронов $n_e$, исходя из предположения, что она равна концентрации ионов $n_i$:
+\[ I_{\text{iн}} = 0{,}4 n_e e S \sqrt{\dfrac{2kT_e}{m_i}} \qquad \Rightarrow \qquad n_e = \frac{I_{\text{iн}}}{0{,}4 e S \sqrt{\dfrac{2kT_e}{m_i}}} \]
+
+Здесь $m_i = 22 \cdot 1,66 \cdot 10^{-27}$ кг -- масса иона неона, $S = \pi d l \approx 3,27\cdot10^{-6} $ м$^2$ -- площадь поверхности зонда.
+
+\item Была рассчитана плазменная частота колебаний электронов по формуле
+\[ \omega_p = \sqrt{\frac{4\pi n_e e^2}{m_e}} = 5,6 \cdot 10^4 \sqrt{n_e} \ \text{рад/сек} \qquad \text{[СГС]} \] 
+
+\item Рассчитана электронная поляризационная длина $r_{De}$ по формуле
+\[r_{De} = \sqrt{\frac{k T_e}{4\pi n_e e^2}} \ \text{см} \qquad \text{[СГС]}\]
+% \[r_{De} = \sqrt{\frac{\varepsilon_0 k T_e}{n_e e^2}} \ \text{м} \qquad \text{[СИ]}\]
+
+\item Рассчитан дебаевский радиус экранирования $r_D$, учитывая, что $T_e >> T_i$, а температура ионов равна комнатной ($T_i \simeq 300$ К).
+\[r_D = \sqrt{\frac{k T_i}{4\pi n_e e^2}} \ \text{см} \qquad \text{[СГС]}\]
+
+\item Оценено среднее число ионов в дебаевской сфере
+\[N_D = \frac{4}{3} \pi r_D^3 n_i \qquad \text{[СГС]} \]
+
+\item Оценена степень ионизации плазмы $\alpha$ при условии того, что давление в трубке $P \simeq 2$ Торр:
+\[ \alpha = \dfrac{n_i}{n}, \qquad n = \dfrac{P}{kT_i}\]
+
+Все результаты представлены в таблице:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$I_p$, мА & $n_e$, $10^{15}$ м$^{-3}$ & $\omega_p$, $10^9$ рад/c & $r_{De}$, $10^{-5}$ м & $r_D$, $10^{-6}$ м & $N_D$ & $\alpha$, $10^{-8}$ \\ \hline
+5,167 & $16,3\pm 0,8$  & $7,14\pm 0,25$ & $9,2\pm 0,5$ & $9,4\pm 0,5$ & $57\pm 5$ & 3,4\\ \hline
+3,048 & $9,89\pm 0,35$ & $5,57\pm 0,14$ & $12,4\pm 0,4$ & $12,0\pm 0,4$ & $78\pm 4$ & 2,0\\ \hline
+1,672 & $5,85\pm 0,12$ & $4,28\pm 0,06$ & $16,4\pm 0,3$ & $15,6 \pm 0,3$ & $93\pm 3$ & 1,2\\ \hline
+\end{tabular}
+\end{table}
+
+\item Построены графики зависимостей электронной температуры и концентрации от тока разряда. На втором графике наблюдается линейная зависимость:
+	\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ТИ.PDF}
+    \caption{зависимость электронной температуры от тока разряда}
+\end{figure}
+	\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{НИ.PDF}
+    \caption{зависимость электронной концентрации от тока разряда}
+\end{figure}
+\end{enumerate}
+
+\section*{Выводы}
+В результате выполнения работы были сняты вольтамперные и зондовые характеристики тлеющего разряда, рассчитаны электронные температуры при разных токах разряда, а также другие основные параметры плазмы, оценены их погрешности. Все полученные значения выглядят достоверно.
+
+Поскольку линейные размеры плазмы $>>$ её поляризационной длины, плазму можно считать квазинейтральной.
+
+Полученные числа Дебая $>1$, поэтому плазму можно рассматривать как идеальный газ.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

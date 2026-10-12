@@ -507,15 +507,14 @@ $$\begin{cases} 2c_1 + 4c_2 = 1, \\ \frac{2}{6}c_1 + \frac{16}{6}c_2 = 0 \Righta
 Из второго: $c_1 = -8c_2$. Подставляем: $-16c_2 + 4c_2 = 1 \Rightarrow c_2 = -\tfrac{1}{12}$, $c_1 = \tfrac{2}{3}$.
 
 \textbf{Формула:}
-$$\boxed{f'(x) \approx \frac{-f(x-2h) + 8f(x-h) - 8f(x+h) + f(x+2h)}{12h}.}$$
+$$\boxed{f'(x) \approx \frac{f(x-2h) - 8f(x-h) + 8f(x+h) - f(x+2h)}{12h}.}$$
 
 \textbf{Аппроксимационная погрешность.} Коэффициент при $h^4 f^{(5)}$:
-$$\frac{1}{h}\left(\frac{2}{3}\cdot\frac{2}{120} - \frac{1}{12}\cdot\frac{64}{120}\right)h^4 f^{(5)} = \frac{1}{h}\cdot\frac{4-64}{360}\,h^5 f^{(5)} = -\frac{h^4}{30}f^{(5)}(\xi).$$
+$$\frac{1}{h}\left(\frac{2}{3}\cdot\frac{2}{120} - \frac{1}{12}\cdot\frac{64}{120}\right)h^5 f^{(5)} = \frac{1}{h}\cdot\frac{16-64}{1440}\,h^5 f^{(5)} = -\frac{h^4}{30}f^{(5)}(\xi).$$
 $$|R_{\text{мет}}| \le \frac{90}{30}\,h^4 = 3h^4.$$
 
-\textbf{Округлительная погрешность.} Сумма модулей коэффициентов: $\frac{1+8+8+1}{12} = \frac{18}{12} = \frac{3}{2}$.
+\textbf{Округлительная погрешность.} Сумма модулей коэффициентов: $\frac{1+8+8+1}{12} = \frac{18}{12} = \frac{3}{2} = 1{,}5$.
 $$|R_{\text{окр}}| \le \frac{3}{2}\cdot\frac{\varepsilon}{h} = \frac{1{,}5\cdot 2{,}5\cdot 10^{-6}}{h} = \frac{3{,}75\cdot 10^{-6}}{h}.$$
-
 
 \textbf{Оптимальный шаг.} Минимизируем $\Delta(h) = 3h^4 + \dfrac{3{,}75\cdot 10^{-6}}{h}$:
 $$\Delta'(h) = 12h^3 - \frac{3{,}75\cdot 10^{-6}}{h^2} = 0 \;\Rightarrow\; h^5 = \frac{3{,}75\cdot 10^{-6}}{12} = 3{,}125\cdot 10^{-7}.$$

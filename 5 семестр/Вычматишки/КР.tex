@@ -1,0 +1,532 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\begin{document}
+
+
+
+\section*{Задачи 1--6. Погрешности, разностные формулы, прямые методы}
+
+\section*{Задача 1. Линейная оценка погрешности неявно заданной функции}
+
+\textbf{Условие:} $y = 1$ --- корень уравнения $F(a,b,c,y) = ay^7 + by^2 - c = 0$, где $a = 2$, $b = 3$, $c = 5$. Погрешности параметров: $|\Delta a| \le 10^{-4}$, $|\Delta b| \le 2\cdot 10^{-4}$, $|\Delta c| \le 10^{-4}$. Найти линейную оценку $|\Delta y|$.
+
+\textbf{Теория.} Если функция $y = y(a,b,c)$ задана неявно уравнением $F(a,b,c,y) = 0$, то её частные производные находятся по формулам:
+$$
+\frac{\partial y}{\partial a} = -\frac{F_a}{F_y}, \quad
+\frac{\partial y}{\partial b} = -\frac{F_b}{F_y}, \quad
+\frac{\partial y}{\partial c} = -\frac{F_c}{F_y},
+$$
+где $F_y \neq 0$. Линейная оценка погрешности:
+$$
+|\Delta y| \le \left|\frac{\partial y}{\partial a}\right||\Delta a| + \left|\frac{\partial y}{\partial b}\right||\Delta b| + \left|\frac{\partial y}{\partial c}\right||\Delta c|.
+$$
+
+\textbf{Решение.}
+
+\textit{Шаг 1.} Вычисляем частные производные $F$:
+$$
+F_a = y^7, \quad F_b = y^2, \quad F_c = -1, \quad F_y = 7ay^6 + 2by.
+$$
+
+\textit{Шаг 2.} Подставляем точку $(a,b,c,y) = (2, 3, 5, 1)$:
+$$
+F_a = 1^7 = 1, \quad F_b = 1^2 = 1, \quad F_c = -1,
+$$
+$$
+F_y = 7\cdot 2\cdot 1^6 + 2\cdot 3\cdot 1 = 14 + 6 = 20.
+$$
+Проверка: $F_y = 20 \neq 0$, теорема о неявной функции применима.
+
+\textit{Шаг 3.} Находим частные производные $y$:
+$$
+\frac{\partial y}{\partial a} = -\frac{1}{20} = -0{,}05, \quad
+\frac{\partial y}{\partial b} = -\frac{1}{20} = -0{,}05, \quad
+\frac{\partial y}{\partial c} = -\frac{-1}{20} = \frac{1}{20} = 0{,}05.
+$$
+
+\textit{Шаг 4.} Линейная оценка погрешности:
+$$
+|\Delta y| \le \left|\frac{\partial y}{\partial a}\right||\Delta a| + \left|\frac{\partial y}{\partial b}\right||\Delta b| + \left|\frac{\partial y}{\partial c}\right||\Delta c|
+$$
+$$
+|\Delta y| \le \frac{1}{20}\cdot 10^{-4} + \frac{1}{20}\cdot 2\cdot 10^{-4} + \frac{1}{20}\cdot 10^{-4}
+$$
+$$
+|\Delta y| \le \frac{1}{20}\left(10^{-4} + 2\cdot 10^{-4} + 10^{-4}\right) = \frac{4\cdot 10^{-4}}{20} = 2\cdot 10^{-5}.
+$$
+
+$$
+\boxed{|\Delta y| \le 2\cdot 10^{-5}.}
+$$
+
+\textbf{Смысл результата:} при заданных погрешностях коэффициентов уравнения корень $y=1$ определён с точностью не хуже $2\cdot 10^{-5}$. Заметим, что погрешность $y$ оказалась \textit{меньше} погрешностей коэффициентов --- это следствие того, что $F_y = 20$ довольно велико (уравнение ``чувствительно'' к изменению $y$, поэтому малые изменения коэффициентов дают ещё меньшие изменения корня).
+
+
+\vspace{0.5cm}
+
+\subsection*{Задача 2. Односторонняя разностная формула второго порядка}
+\textbf{Условие:} по значениям $f(x)$, $f(x+h)$, $f(x+2h)$ построить формулу второго порядка для $f'(x)$. При $|f^{(3)}|\le 9$ и ошибке каждого значения $\varepsilon = 1{,}2\cdot 10^{-5}$ оценить округлительную составляющую и найти оптимальный шаг.
+
+\textbf{Метод неопределённых коэффициентов.} Ищем
+$$f'(x) \approx \frac{c_0 f(x) + c_1 f(x+h) + c_2 f(x+2h)}{h}.$$
+Разложим в ряд Тейлора:
+$$f(x+h) = f + hf' + \frac{h^2}{2}f'' + \frac{h^3}{6}f''' + \dots, \quad f(x+2h) = f + 2hf' + 2h^2 f'' + \frac{4h^3}{3}f''' + \dots$$
+Подставляем и приравниваем коэффициенты при $f$, $hf'$, $h^2 f''$:
+$$
+\begin{cases}
+c_0 + c_1 + c_2 = 0, \\
+c_1 + 2c_2 = 1, \\
+\dfrac{c_1}{2} + 2c_2 = 0.
+\end{cases}
+$$
+Из третьего уравнения $c_1 = -4c_2$, из второго $-2c_2 = 1 \Rightarrow c_2 = -\tfrac{1}{2}$, $c_1 = 2$, $c_0 = -\tfrac{3}{2}$.
+
+\textbf{Формула:}
+$$\boxed{f'(x) \approx \frac{-3f(x) + 4f(x+h) - f(x+2h)}{2h}}.$$
+
+\textbf{Погрешность аппроксимации (методическая).} Коэффициент при $h^3 f'''$:
+$$\frac{c_1}{6} + \frac{8c_2}{6} = \frac{2}{6} - \frac{4}{6} = -\frac{1}{3}.$$
+После деления на $h$: $R_{\text{мет}} = -\dfrac{h^2}{3}f'''(\xi)$. Порядок аппроксимации $\mathcal{O}(h^2)$.
+$$|R_{\text{мет}}| \le \frac{h^2}{3}\cdot 9 = 3h^2.$$
+
+\textbf{Округлительная погрешность.} Каждое значение $f$ известно с ошибкой $\varepsilon$:
+$$|R_{\text{окр}}| \le \frac{|c_0|+|c_1|+|c_2|}{h}\,\varepsilon = \frac{3/2 + 2 + 1/2}{h}\,\varepsilon = \frac{4\varepsilon}{h}.$$
+
+\textbf{Оптимальный шаг.} Минимизируем $\Delta(h) = 3h^2 + \dfrac{4\varepsilon}{h}$:
+$$\Delta'(h) = 6h - \frac{4\varepsilon}{h^2} = 0 \;\Rightarrow\; h^3 = \frac{2\varepsilon}{3} = \frac{2\cdot 1{,}2\cdot 10^{-5}}{3} = 8\cdot 10^{-6}.$$
+$$\boxed{h_{\text{opt}} = 2\cdot 10^{-2} = 0{,}02.}$$
+$$\Delta_{\min} = 3\cdot(0{,}02)^2 + \frac{4\cdot 1{,}2\cdot 10^{-5}}{0{,}02} = 1{,}2\cdot 10^{-3} + 2{,}4\cdot 10^{-3} = 3{,}6\cdot 10^{-3}.$$
+
+\vspace{0.5cm}
+\subsection*{Задача 3. Центральная формула второй производной}
+\textbf{Условие:} для $D_h^2 f = \dfrac{f(x+h)-2f(x)+f(x-h)}{h^2}$ при ошибке значения функции $\varepsilon = 10^{-7}$ найти порядок, оценки двух составляющих ошибки.
+
+\textbf{Разложение Тейлора:}
+$$f(x\pm h) = f \pm hf' + \frac{h^2}{2}f'' \pm \frac{h^3}{6}f''' + \frac{h^4}{24}f^{(4)} \pm \dots$$
+$$f(x+h)+f(x-h) = 2f + h^2 f'' + \frac{h^4}{12}f^{(4)} + \mathcal{O}(h^6).$$
+$$D_h^2 f = f'' + \frac{h^2}{12}f^{(4)}(\xi) + \dots$$
+
+\textbf{Порядок аппроксимации:} $\mathcal{O}(h^2)$.
+
+\textbf{Методическая погрешность:} $|R_{\text{мет}}| \le \dfrac{h^2}{12}|f^{(4)}|$.
+
+\textbf{Округлительная погрешность:}
+$$|R_{\text{окр}}| \le \frac{1+2+1}{h^2}\,\varepsilon = \frac{4\varepsilon}{h^2}.$$
+
+\textbf{Оптимальный шаг} (в общем виде, т.\,к. $|f^{(4)}|$ не задано):
+$$\Delta(h) = \frac{h^2}{12}|f^{(4)}| + \frac{4\varepsilon}{h^2}, \quad \Delta'(h)=0 \;\Rightarrow\; h_{\text{opt}} = \left(\frac{48\varepsilon}{|f^{(4)}|}\right)^{1/4}.$$
+
+\vspace{0.5cm}
+\subsection*{Задача 4. Число обусловленности в трёх подчинённых нормах}
+$$A = \begin{pmatrix} 12 & -4 & 0 \\ 16 & 3 & 0 \\ 0 & 0 & 6 \end{pmatrix}.$$
+
+\textbf{Норма 1} (макс. сумма столбцов):
+$\|A\|_1 = \max(28,\, 7,\, 6) = 28.$
+
+\textbf{Норма $\infty$} (макс. сумма строк):
+$\|A\|_\infty = \max(16,\, 19,\, 6) = 19.$
+
+\textbf{Норма 2} (спектральная). Матрица $A^\text{T}A$:
+$$A^\text{T}A = \begin{pmatrix} 400 & 0 & 0 \\ 0 & 25 & 0 \\ 0 & 0 & 36 \end{pmatrix} \;\Rightarrow\; \|A\|_2 = \sqrt{400} = 20.$$
+
+\textbf{Обратная матрица:}
+$$A^{-1} = \begin{pmatrix} 3/100 & 4/100 & 0 \\ -16/100 & 12/100 & 0 \\ 0 & 0 & 1/6 \end{pmatrix} = \begin{pmatrix} 0{,}03 & 0{,}04 & 0 \\ -0{,}16 & 0{,}12 & 0 \\ 0 & 0 & 1/6 \end{pmatrix}.$$
+
+\textbf{Нормы обратной:}
+$\|A^{-1}\|_1 = \max(0{,}19,\, 0{,}16,\, 1/6) = 0{,}19;$
+$\|A^{-1}\|_\infty = \max(0{,}07,\, 0{,}28,\, 1/6) = 0{,}28;$
+$(A^{-1})^\text{T}A^{-1} = (A^\text{T}A)^{-1} = \operatorname{diag}(1/400,\, 1/25,\, 1/36) \Rightarrow \|A^{-1}\|_2 = \sqrt{1/25} = 0{,}2.$
+
+\textbf{Числа обусловленности:}
+$$\boxed{\kappa_1 = 28\cdot 0{,}19 = 5{,}32, \quad \kappa_\infty = 19\cdot 0{,}28 = 5{,}32, \quad \kappa_2 = 20\cdot 0{,}2 = 4.}$$
+
+\vspace{0.5cm}
+\subsection*{Задача 5. LU-разложение}
+$$A = \begin{pmatrix} 2 & 1 & 0 & 1 \\ 2 & 4 & -1 & 1 \\ -2 & 2 & 1 & 0 \\ 0 & -3 & 3 & 3 \end{pmatrix}, \quad b = \begin{pmatrix} 2 \\ -3 \\ -2 \\ 12 \end{pmatrix}.$$
+
+\textbf{Прямой ход метода Гаусса} (без перестановок):
+
+\textit{Шаг 1} ($a_{11}=2$): $l_{21}=1$, $l_{31}=-1$, $l_{41}=0$.
+$$\begin{pmatrix} 2 & 1 & 0 & 1 \\ 0 & 3 & -1 & 0 \\ 0 & 3 & 1 & 1 \\ 0 & -3 & 3 & 3 \end{pmatrix}$$
+
+\textit{Шаг 2} ($a_{22}=3$): $l_{32}=1$, $l_{42}=-1$.
+$$\begin{pmatrix} 2 & 1 & 0 & 1 \\ 0 & 3 & -1 & 0 \\ 0 & 0 & 2 & 1 \\ 0 & 0 & 2 & 3 \end{pmatrix}$$
+
+\textit{Шаг 3} ($a_{33}=2$): $l_{43}=1$.
+$$U = \begin{pmatrix} 2 & 1 & 0 & 1 \\ 0 & 3 & -1 & 0 \\ 0 & 0 & 2 & 1 \\ 0 & 0 & 0 & 2 \end{pmatrix}, \quad L = \begin{pmatrix} 1 & 0 & 0 & 0 \\ 1 & 1 & 0 & 0 \\ -1 & 1 & 1 & 0 \\ 0 & -1 & 1 & 1 \end{pmatrix}.$$
+
+\textbf{Решение $Ly = b$:}
+$y_1 = 2$; \ $y_2 = -3 - 2 = -5$; \ $y_3 = -2 -(-1)\cdot 2 - 1\cdot(-5) = 5$; \ $y_4 = 12 - 0 -(-1)(-5) - 1\cdot 5 = 2.$
+
+\textbf{Решение $Ux = y$:}
+$x_4 = 1$; \ $x_3 = (5-1)/2 = 2$; \ $x_2 = (-5+2)/3 = -1$; \ $x_1 = (2-(-1)-1)/2 = 1.$
+
+$$\boxed{x = (1,\,-1,\,2,\,1)^\text{T}.}$$
+
+\vspace{0.5cm}
+\subsection*{Задача 6. Разложение Холецкого}
+$$A = \begin{pmatrix} 4 & 2 & 0 & 2 \\ 2 & 5 & -2 & 1 \\ 0 & -2 & 5 & 2 \\ 2 & 1 & 2 & 6 \end{pmatrix}, \quad b = \begin{pmatrix} 10 \\ 15 \\ -7 \\ 8 \end{pmatrix}.$$
+
+Матрица симметрична. Главные миноры: $\Delta_1=4$, $\Delta_2=16$, $\Delta_3=64$, $\Delta_4=256$ --- все положительны $\Rightarrow$ $A$ положительно определена.
+
+\textbf{Построение $L$} ($A = LL^\text{T}$):
+$$l_{11} = \sqrt{4} = 2; \quad l_{21} = 1,\ l_{31} = 0,\ l_{41} = 1;$$
+$$l_{22} = \sqrt{5-1} = 2; \quad l_{32} = \frac{-2-0}{2} = -1,\ l_{42} = \frac{1-1}{2} = 0;$$
+$$l_{33} = \sqrt{5-0-1} = 2; \quad l_{43} = \frac{2-0-0}{2} = 1;$$
+$$l_{44} = \sqrt{6-1-0-1} = 2.$$
+
+$$L = \begin{pmatrix} 2 & 0 & 0 & 0 \\ 1 & 2 & 0 & 0 \\ 0 & -1 & 2 & 0 \\ 1 & 0 & 1 & 2 \end{pmatrix}.$$
+
+\textbf{Решение $Ly = b$:}
+$y_1 = 5$; \ $y_2 = (15-5)/2 = 5$; \ $y_3 = (-7+5)/2 = -1$; \ $y_4 = (8-5+1)/2 = 2.$
+
+\textbf{Решение $L^\text{T}x = y$:}
+$x_4 = 1$; \ $x_3 = (-1-1)/2 = -1$; \ $x_2 = (5+(-1))/2 = 2$; \ $x_1 = (5-2-1)/2 = 1.$
+
+$$\boxed{x = (1,\,2,\,-1,\,1)^\text{T}.}$$
+
+
+
+
+\section*{Тренировочные задачи к КР. Часть 1: Итерационные методы}
+
+\subsection*{Задача 7. Методы Якоби и Зейделя (исправлено)}
+\textbf{Условие:}
+$$
+A = \begin{pmatrix} 5 & 1 & 0 \\ 1 & 6 & 1 \\ 0 & 1 & 4 \end{pmatrix}, \quad 
+\textbf{b} = \begin{pmatrix} 6 \\ 8 \\ 5 \end{pmatrix}, \quad 
+\textbf{x}^{(0)} = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}.
+$$
+
+\textbf{Доказательство сходимости.} Проверяем строгое диагональное преобладание:
+\begin{itemize}
+    \item строка 1: $|5| > |1| + |0| = 1$;
+    \item строка 2: $|6| > |1| + |1| = 2$;
+    \item строка 3: $|4| > |0| + |1| = 1$.
+\end{itemize}
+Все три неравенства строгие $\Rightarrow$ матрица имеет строгое диагональное преобладание $\Rightarrow$ оба метода сходятся при любом начальном приближении.
+
+\textbf{Метод Якоби.} Покомпонентные формулы:
+$$
+\begin{cases}
+x_1^{(k+1)} = \dfrac{1}{5}\bigl(6 - x_2^{(k)}\bigr), \\[6pt]
+x_2^{(k+1)} = \dfrac{1}{6}\bigl(8 - x_1^{(k)} - x_3^{(k)}\bigr), \\[6pt]
+x_3^{(k+1)} = \dfrac{1}{4}\bigl(5 - x_2^{(k)}\bigr).
+\end{cases}
+$$
+
+\textit{Итерация 1} ($k=0$, из нуля):
+$$x_1^{(1)} = \tfrac{6}{5} = 1,2; \quad x_2^{(1)} = \tfrac{8}{6} = \tfrac{4}{3} \approx 1,3333; \quad x_3^{(1)} = \tfrac{5}{4} = 1,25.$$
+
+\textit{Итерация 2} ($k=1$):
+$$x_1^{(2)} = \tfrac{1}{5}\bigl(6 - \tfrac{4}{3}\bigr) = \tfrac{14}{15} \approx 0,9333;$$
+$$x_2^{(2)} = \tfrac{1}{6}\bigl(8 - 1,2 - 1,25\bigr) = \tfrac{5,55}{6} = 0,925;$$
+$$x_3^{(2)} = \tfrac{1}{4}\bigl(5 - \tfrac{4}{3}\bigr) = \tfrac{11}{12} \approx 0,9167.$$
+
+\textbf{Метод Зейделя.} Формулы (уже вычисленные значения подставляем сразу):
+$$
+\begin{cases}
+x_1^{(k+1)} = \dfrac{1}{5}\bigl(6 - x_2^{(k)}\bigr), \\[6pt]
+x_2^{(k+1)} = \dfrac{1}{6}\bigl(8 - x_1^{(k+1)} - x_3^{(k)}\bigr), \\[6pt]
+x_3^{(k+1)} = \dfrac{1}{4}\bigl(5 - x_2^{(k+1)}\bigr).
+\end{cases}
+$$
+
+\textit{Итерация 1}:
+$$x_1^{(1)} = 1,2; \quad x_2^{(1)} = \tfrac{1}{6}(8 - 1,2 - 0) = \tfrac{17}{15} \approx 1,1333; \quad x_3^{(1)} = \tfrac{1}{4}\bigl(5 - \tfrac{17}{15}\bigr) = \tfrac{29}{30} \approx 0,9667.$$
+
+\textit{Итерация 2}:
+$$x_1^{(2)} = \tfrac{1}{5}\bigl(6 - \tfrac{17}{15}\bigr) = \tfrac{73}{75} \approx 0,9733;$$
+$$x_2^{(2)} = \tfrac{1}{6}\bigl(8 - \tfrac{73}{75} - \tfrac{29}{30}\bigr) = \tfrac{101}{100} = 1,01;$$
+$$x_3^{(2)} = \tfrac{1}{4}(5 - 1,01) = 0,9975.$$
+
+Зейдель уже на второй итерации даёт результат, близкий к точному решению $\textbf{x}^* = (1,\, 1,\, 1)^T$.
+
+\vspace{0.5cm}
+\subsection*{Задача 8. Метод простой итерации (МПИ)}
+\textbf{Условие:} Для $A = \begin{pmatrix} 2 & 0 & 0 \\ 0 & 4 & 0 \\ 0 & 0 & 8 \end{pmatrix}$, $\textbf{b} = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}$ найти интервал сходимости, $\tau_{opt}$, коэффициент сжатия и первый шаг из нуля.
+
+\textbf{Теория:}
+МПИ записывается как $\textbf{x}^{(k+1)} = \textbf{x}^{(k)} + \tau (\textbf{b} - A\textbf{x}^{(k)}) = B\textbf{x}^{(k)} + \tau\textbf{b}$, где $B = E - \tau A$.
+Метод сходится, если спектральный радиус $\rho(B) < 1$. Так как $A$ симметрична и положительно определена, её собственные значения $\lambda_i > 0$.
+Собственные значения $B$: $\mu_i = 1 - \tau \lambda_i$.
+Условие сходимости: $-1 < 1 - \tau \lambda_i < 1 \implies 0 < \tau < \frac{2}{\lambda_{max}}$.
+Оптимальное $\tau$ минимизирует $\max |\mu_i|$: $\tau_{opt} = \frac{2}{\lambda_{min} + \lambda_{max}}$.
+Коэффициент сжатия: $q = \frac{\lambda_{max} - \lambda_{min}}{\lambda_{max} + \lambda_{min}}$.
+
+\textbf{Решение:}
+Матрица $A$ диагональна, поэтому её собственные значения — это элементы на диагонали: $\lambda_1 = 2$, $\lambda_2 = 4$, $\lambda_3 = 8$.
+$\lambda_{min} = 2$, $\lambda_{max} = 8$.
+\begin{enumerate}
+    \item \textbf{Интервал сходимости:} $0 < \tau < \frac{2}{8} \implies \tau \in (0;\, 0,25)$.
+    \item \textbf{Оптимальный параметр:} $\tau_{opt} = \frac{2}{2 + 8} = 0,2$.
+    \item \textbf{Коэффициент сжатия:} $q = \frac{8 - 2}{8 + 2} = \frac{6}{10} = 0,6$.
+    \item \textbf{Первый шаг из нуля} ($\textbf{x}^{(0)} = \textbf{0}$):
+    $$\textbf{x}^{(1)} = \textbf{0} + \tau_{opt}(\textbf{b} - A\cdot\textbf{0}) = 0,2 \cdot \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 0,2 \\ 0,2 \\ 0,2 \end{pmatrix}.$$
+\end{enumerate}
+
+\vspace{0.5cm}
+\subsection*{Задача 9. Метод наискорейшего спуска}
+\textbf{Условие:} Для $A = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 4 \end{pmatrix}$, $\textbf{b} = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}$ выполнить две итерации из $\textbf{x}_0 = \textbf{0}$.
+
+\textbf{Теория:}
+Метод применяется для симметричных положительно определённых матриц. Мы минимизируем функционал $F(\textbf{x}) = \frac{1}{2}\textbf{x}^T A \textbf{x} - \textbf{b}^T\textbf{x}$.
+Двигаемся в направлении антиградиента (вектора невязки) $\textbf{r}_k = \textbf{b} - A\textbf{x}_k$.
+Длина шага $\tau_k$ выбирается из условия минимума функционала вдоль этого направления:
+$$\tau_k = \frac{\textbf{r}_k^T \textbf{r}_k}{\textbf{r}_k^T A \textbf{r}_k}$$
+Обновление решения: $\textbf{x}_{k+1} = \textbf{x}_k + \tau_k \textbf{r}_k$.
+
+\textbf{Решение:}
+\textit{Итерация 0:} $\textbf{x}_0 = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$.
+Невязка: $\textbf{r}_0 = \textbf{b} - A\textbf{x}_0 = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}$.
+Вектор $A\textbf{r}_0 = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 4 \end{pmatrix} \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 \\ 2 \\ 4 \end{pmatrix}$.
+Скалярные произведения:
+$\textbf{r}_0^T \textbf{r}_0 = 1^2 + 1^2 + 1^2 = 3$.
+$\textbf{r}_0^T A \textbf{r}_0 = 1\cdot1 + 1\cdot2 + 1\cdot4 = 7$.
+Шаг: $\tau_0 = \frac{3}{7}$.
+Новое решение: $\textbf{x}_1 = \textbf{x}_0 + \tau_0 \textbf{r}_0 = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix} + \frac{3}{7} \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 3/7 \\ 3/7 \\ 3/7 \end{pmatrix}$.
+
+\textit{Итерация 1:}
+Невязка: $\textbf{r}_1 = \textbf{b} - A\textbf{x}_1 = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix} - \begin{pmatrix} 1 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 4 \end{pmatrix} \begin{pmatrix} 3/7 \\ 3/7 \\ 3/7 \end{pmatrix} = \begin{pmatrix} 1 - 3/7 \\ 1 - 6/7 \\ 1 - 12/7 \end{pmatrix} = \begin{pmatrix} 4/7 \\ 1/7 \\ -5/7 \end{pmatrix}$.
+Вектор $A\textbf{r}_1 = \begin{pmatrix} 4/7 \\ 2/7 \\ -20/7 \end{pmatrix}$.
+Скалярные произведения:
+$\textbf{r}_1^T \textbf{r}_1 = \left(\frac{4}{7}\right)^2 + \left(\frac{1}{7}\right)^2 + \left(-\frac{5}{7}\right)^2 = \frac{16 + 1 + 25}{49} = \frac{42}{49} = \frac{6}{7}$.
+$\textbf{r}_1^T A \textbf{r}_1 = \frac{4}{7}\cdot\frac{4}{7} + \frac{1}{7}\cdot\frac{2}{7} + \left(-\frac{5}{7}\right)\cdot\left(-\frac{20}{7}\right) = \frac{16 + 2 + 100}{49} = \frac{118}{49}$.
+Шаг: $\tau_1 = \frac{6/7}{118/49} = \frac{6}{7} \cdot \frac{49}{118} = \frac{42}{118} = \frac{21}{59}$.
+Новое решение:
+$$\textbf{x}_2 = \textbf{x}_1 + \tau_1 \textbf{r}_1 = \begin{pmatrix} 3/7 \\ 3/7 \\ 3/7 \end{pmatrix} + \frac{21}{59} \begin{pmatrix} 4/7 \\ 1/7 \\ -5/7 \end{pmatrix} = \begin{pmatrix} 3/7 + 12/59 \\ 3/7 + 3/59 \\ 3/7 - 15/59 \end{pmatrix} = \begin{pmatrix} 261/413 \\ 198/413 \\ 72/413 \end{pmatrix} \approx \begin{pmatrix} 0,632 \\ 0,479 \\ 0,174 \end{pmatrix}.$$
+
+
+\vspace{0.5cm}
+\subsection*{Задача 10. Метод сопряжённых градиентов (CG)}
+\textbf{Условие:}
+$$
+A = \begin{pmatrix} 4 & 1 & 0 \\ 1 & 3 & 1 \\ 0 & 1 & 2 \end{pmatrix}, \quad 
+\textbf{b} = \begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix}, \quad 
+\textbf{x}^{(0)} = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}.
+$$
+
+\textbf{Теория.} Метод CG применим к симметричным положительно определённым матрицам. Алгоритм:
+\begin{align*}
+\textbf{r}_0 &= \textbf{b} - A\textbf{x}_0, \quad \textbf{p}_0 = \textbf{r}_0, \\
+\alpha_k &= \frac{(\textbf{r}_k, \textbf{r}_k)}{(\textbf{p}_k, A\textbf{p}_k)}, \quad 
+\textbf{x}_{k+1} = \textbf{x}_k + \alpha_k \textbf{p}_k, \\
+\textbf{r}_{k+1} &= \textbf{r}_k - \alpha_k A\textbf{p}_k, \quad 
+\beta_k = \frac{(\textbf{r}_{k+1}, \textbf{r}_{k+1})}{(\textbf{r}_k, \textbf{r}_k)}, \quad 
+\textbf{p}_{k+1} = \textbf{r}_{k+1} + \beta_k \textbf{p}_k.
+\end{align*}
+
+\textbf{Инициализация:} $\textbf{r}_0 = \textbf{b} = (1,\, 2,\, 1)^T$, $\textbf{p}_0 = (1,\, 2,\, 1)^T$.
+
+\textit{Итерация 0:}
+$$A\textbf{p}_0 = \begin{pmatrix} 4+2 \\ 1+6+1 \\ 2+2 \end{pmatrix} = \begin{pmatrix} 6 \\ 8 \\ 4 \end{pmatrix}.$$
+$$(\textbf{r}_0, \textbf{r}_0) = 1 + 4 + 1 = 6, \quad (\textbf{p}_0, A\textbf{p}_0) = 6 + 16 + 4 = 26.$$
+$$\alpha_0 = \frac{6}{26} = \frac{3}{13}.$$
+$$\textbf{x}_1 = \frac{3}{13}\begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix} = \begin{pmatrix} 3/13 \\ 6/13 \\ 3/13 \end{pmatrix}.$$
+$$\textbf{r}_1 = \begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix} - \frac{3}{13}\begin{pmatrix} 6 \\ 8 \\ 4 \end{pmatrix} = \begin{pmatrix} -5/13 \\ 2/13 \\ 1/13 \end{pmatrix}.$$
+$$(\textbf{r}_1, \textbf{r}_1) = \frac{25+4+1}{169} = \frac{30}{169}, \quad \beta_0 = \frac{30/169}{6} = \frac{5}{169}.$$
+$$\textbf{p}_1 = \begin{pmatrix} -5/13 \\ 2/13 \\ 1/13 \end{pmatrix} + \frac{5}{169}\begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix} = \frac{1}{169}\begin{pmatrix} -60 \\ 36 \\ 18 \end{pmatrix}.$$
+
+\textit{Итерация 1:}
+$$A\textbf{p}_1 = \frac{1}{169}\begin{pmatrix} -240+36 \\ -60+108+18 \\ 36+36 \end{pmatrix} = \frac{1}{169}\begin{pmatrix} -204 \\ 66 \\ 72 \end{pmatrix}.$$
+$$(\textbf{p}_1, A\textbf{p}_1) = \frac{(-60)(-204) + 36\cdot 66 + 18\cdot 72}{169^2} = \frac{15912}{169^2}.$$
+$$\alpha_1 = \frac{30/169}{15912/169^2} = \frac{30\cdot 169}{15912} = \frac{65}{204}.$$
+$$\textbf{x}_2 = \begin{pmatrix} 3/13 \\ 6/13 \\ 3/13 \end{pmatrix} + \frac{65}{204}\cdot\frac{1}{169}\begin{pmatrix} -60 \\ 36 \\ 18 \end{pmatrix} = \begin{pmatrix} 3/13 \\ 6/13 \\ 3/13 \end{pmatrix} + \frac{5}{2652}\begin{pmatrix} -60 \\ 36 \\ 18 \end{pmatrix} = \begin{pmatrix} 2/17 \\ 9/17 \\ 9/34 \end{pmatrix} \approx \begin{pmatrix} 0,118 \\ 0,529 \\ 0,265 \end{pmatrix}.$$
+
+\vspace{0.5cm}
+\subsection*{Задача 11. Пространства Крылова и GMRES}
+\textbf{Условие:}
+$$
+A = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 4 \end{pmatrix}, \quad 
+\textbf{b} = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}, \quad 
+\textbf{x}^{(0)} = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}.
+$$
+
+\textbf{Теория.} Пространство Крылова строится как $\mathcal{K}_m(A, \textbf{r}_0) = \operatorname{span}\{\textbf{r}_0, A\textbf{r}_0, A^2\textbf{r}_0, \dots\}$. GMRES на $n$-мерной задаче находит точное решение не более чем за $n$ итераций (в точной арифметике).
+
+\textbf{Решение.} $\textbf{r}_0 = \textbf{b} = (1,\, 1,\, 1)^T$.
+$$A\textbf{r}_0 = (1,\, 2,\, 4)^T, \quad A^2\textbf{r}_0 = (1,\, 4,\, 16)^T.$$
+Матрица из этих векторов — матрица Вандермонда с узлами $1, 2, 4$:
+$$\det\begin{pmatrix} 1 & 1 & 1 \\ 1 & 2 & 4 \\ 1 & 4 & 16 \end{pmatrix} = (2-1)(4-1)(4-2) = 6 \neq 0.$$
+Векторы линейно независимы $\Rightarrow$ \textbf{размерность пространства Крылова} $= 3$.
+
+\textbf{Максимальное число итераций GMRES} до точного решения $= n = 3$.
+
+\vspace{0.5cm}
+\subsection*{Задача 12. Метод SOR}
+\textbf{Условие:}
+$$
+A = \begin{pmatrix} 5 & 3 \\ 3 & 5 \end{pmatrix}, \quad 
+\textbf{b} = \begin{pmatrix} 8 \\ 8 \end{pmatrix}, \quad 
+\textbf{x}^{(0)} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}.
+$$
+
+\textbf{Теория.} Метод SOR (successive over-relaxation):
+$$x_i^{(k+1)} = (1-\omega)x_i^{(k)} + \frac{\omega}{a_{ii}}\left(b_i - \sum_{j<i}a_{ij}x_j^{(k+1)} - \sum_{j>i}a_{ij}x_j^{(k)}\right).$$
+Для симметричной положительно определённой матрицы SOR сходится при $0 < \omega < 2$. Оптимальный параметр:
+$$\omega_{\text{opt}} = \frac{2}{1 + \sqrt{1 - \rho^2(R_J)}},$$
+где $\rho(R_J)$ — спектральный радиус матрицы Якоби $R_J = -D^{-1}(L+U)$.
+
+\textbf{Формулы SOR:}
+$$
+\begin{cases}
+x_1^{(k+1)} = (1-\omega)x_1^{(k)} + \dfrac{\omega}{5}\bigl(8 - 3x_2^{(k)}\bigr), \\[6pt]
+x_2^{(k+1)} = (1-\omega)x_2^{(k)} + \dfrac{\omega}{5}\bigl(8 - 3x_1^{(k+1)}\bigr).
+\end{cases}
+$$
+
+\textbf{Поиск $\omega_{\text{opt}}$:}
+$$R_J = -\begin{pmatrix} 1/5 & 0 \\ 0 & 1/5 \end{pmatrix}\begin{pmatrix} 0 & 3 \\ 3 & 0 \end{pmatrix} = \begin{pmatrix} 0 & -3/5 \\ -3/5 & 0 \end{pmatrix}.$$
+Собственные значения: $\lambda^2 = 9/25 \Rightarrow \lambda = \pm 3/5$. Следовательно, $\rho(R_J) = 3/5$.
+$$\omega_{\text{opt}} = \frac{2}{1 + \sqrt{1 - 9/25}} = \frac{2}{1 + 4/5} = \frac{2}{9/5} = \frac{10}{9} \approx 1,111.$$
+
+\textbf{Две итерации при $\omega = 10/9$:}
+
+\textit{Итерация 1:}
+$$x_1^{(1)} = \frac{10/9}{5}\cdot 8 = \frac{16}{9} \approx 1,778;$$
+$$x_2^{(1)} = \frac{10/9}{5}\bigl(8 - 3\cdot\tfrac{16}{9}\bigr) = \frac{2}{9}\cdot\frac{8}{3} = \frac{16}{27} \approx 0,593.$$
+
+\textit{Итерация 2:}
+$$x_1^{(2)} = \left(1-\tfrac{10}{9}\right)\cdot\tfrac{16}{9} + \tfrac{2}{9}\bigl(8 - 3\cdot\tfrac{16}{27}\bigr) = -\tfrac{16}{81} + \tfrac{2}{9}\cdot\tfrac{56}{9} = \frac{96}{81} = \frac{32}{27} \approx 1,185;$$
+$$x_2^{(2)} = \left(-\tfrac{1}{9}\right)\cdot\tfrac{16}{27} + \tfrac{2}{9}\bigl(8 - 3\cdot\tfrac{32}{27}\bigr) = -\tfrac{16}{243} + \tfrac{2}{9}\cdot\tfrac{40}{9} = \frac{224}{243} \approx 0,922.$$
+
+Точное решение: $\textbf{x}^* = (1,\, 1)^T$.
+
+\vspace{0.5cm}
+\subsection*{Задача 13. Диагональное предобуславливание}
+\textbf{Условие:}
+$$
+A = \begin{pmatrix} 49 & 5 \\ 5 & 25 \end{pmatrix}, \quad M = \operatorname{diag}(49,\, 25).
+$$
+Найти $B = M^{-1/2}AM^{-1/2}$, $\kappa_2(B)$ и сравнить с $\kappa_2(A)$.
+
+\textbf{Теория.} Диагональное предобуславливание нормирует строки и столбцы матрицы, улучшая её обусловленность. Число обусловленности $\kappa_2(A) = \lambda_{\max}/\lambda_{\min}$ для симметричной положительно определённой матрицы.
+
+\textbf{Решение.}
+$$M^{-1/2} = \begin{pmatrix} 1/7 & 0 \\ 0 & 1/5 \end{pmatrix}.$$
+$$B = \begin{pmatrix} 1/7 & 0 \\ 0 & 1/5 \end{pmatrix}\begin{pmatrix} 49 & 5 \\ 5 & 25 \end{pmatrix}\begin{pmatrix} 1/7 & 0 \\ 0 & 1/5 \end{pmatrix} = \begin{pmatrix} 7 & 1 \\ 1 & 5 \end{pmatrix}\begin{pmatrix} 1/7 & 0 \\ 0 & 1/5 \end{pmatrix} = \begin{pmatrix} 1 & 1/7 \\ 1/7 & 1 \end{pmatrix}.$$
+
+\textbf{Собственные значения $B$:} $\det(B - \lambda E) = (1-\lambda)^2 - 1/49 = 0 \Rightarrow \lambda = 1 \pm 1/7$.
+$$\lambda_{\max}(B) = \frac{8}{7}, \quad \lambda_{\min}(B) = \frac{6}{7}, \quad \kappa_2(B) = \frac{8/7}{6/7} = \frac{4}{3} \approx 1,333.$$
+
+\textbf{Собственные значения $A$:} $\operatorname{tr}(A) = 74$, $\det(A) = 1225 - 25 = 1200$.
+$$\lambda = \frac{74 \pm \sqrt{74^2 - 4\cdot 1200}}{2} = \frac{74 \pm \sqrt{676}}{2} = \frac{74 \pm 26}{2}.$$
+$$\lambda_{\max}(A) = 50, \quad \lambda_{\min}(A) = 24, \quad \kappa_2(A) = \frac{50}{24} = \frac{25}{12} \approx 2,083.$$
+
+\textbf{Вывод:} $\kappa_2(B) = 4/3 < \kappa_2(A) = 25/12$. Предобуславливание уменьшило число обусловленности примерно в $1,56$ раза, что ускорит сходимость итерационных методов.
+
+
+\section*{Задачи 14--17. МНК, приближения, QR, разностные формулы}
+
+\subsection*{Задача 14. МНК для переопределённой СЛАУ}
+\textbf{Условие:}
+$$
+A = \begin{pmatrix} 1 & 1 \\ 1 & -1 \\ 1 & 0 \\ 0 & 1 \end{pmatrix}, \quad 
+b = \begin{pmatrix} 1 \\ 2 \\ 0 \\ 1 \end{pmatrix}.
+$$
+Составить нормальные уравнения, найти $x$ и сумму квадратов невязок.
+
+\textbf{Теория.} Переопределённая СЛАУ $Ax \approx b$ ($m > n$) не имеет точного решения в общем случае. Метод наименьших квадратов ищет вектор $x$, минимизирующий $\|Ax - b\|_2^2$. Необходимое условие минимума приводит к \textbf{нормальным уравнениям}:
+$$A^\text{T}A\,x = A^\text{T}b.$$
+
+\textbf{Решение.}
+$$A^\text{T}A = \begin{pmatrix} 1 & 1 & 1 & 0 \\ 1 & -1 & 0 & 1 \end{pmatrix}\begin{pmatrix} 1 & 1 \\ 1 & -1 \\ 1 & 0 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 3 & 1 \\ 1 & 3 \end{pmatrix}.$$
+$$A^\text{T}b = \begin{pmatrix} 1 & 1 & 1 & 0 \\ 1 & -1 & 0 & 1 \end{pmatrix}\begin{pmatrix} 1 \\ 2 \\ 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 3 \\ 0 \end{pmatrix}.$$
+
+\textbf{Нормальные уравнения:}
+$$\begin{cases} 3x_1 + x_2 = 3, \\ x_1 + 3x_2 = 0. \end{cases}$$
+Из второго: $x_1 = -3x_2$. Подставляем в первое: $-9x_2 + x_2 = 3 \Rightarrow x_2 = -\tfrac{3}{8}$, $x_1 = \tfrac{9}{8}$.
+$$\boxed{x = \begin{pmatrix} 9/8 \\ -3/8 \end{pmatrix} = \begin{pmatrix} 1,125 \\ -0,375 \end{pmatrix}.}$$
+
+\textbf{Невязки} $r = Ax - b$:
+$$r_1 = \tfrac{9}{8} - \tfrac{3}{8} - 1 = -\tfrac{1}{4}; \quad r_2 = \tfrac{9}{8} + \tfrac{3}{8} - 2 = -\tfrac{1}{2}; \quad r_3 = \tfrac{9}{8} - 0 = \tfrac{9}{8}; \quad r_4 = -\tfrac{3}{8} - 1 = -\tfrac{11}{8}.$$
+
+\textbf{Сумма квадратов невязок:}
+$$\|r\|_2^2 = \frac{1}{16} + \frac{1}{4} + \frac{81}{64} + \frac{121}{64} = \frac{4 + 16 + 81 + 121}{64} = \frac{222}{64} = \frac{111}{32} \approx 3,469.$$
+
+\vspace{0.5cm}
+\subsection*{Задача 15. Равномерное и среднеквадратичное приближение константой}
+\textbf{Условие:} найти лучшую константу $c$ для $f(x) = x^6$ на $[-2,\,2]$ в равномерной и среднеквадратичной нормах.
+
+\textbf{Равномерная норма.} Ищем $c = \operatorname{argmin}_c \max_{x\in[-2,2]} |x^6 - c|$.
+Функция $x^6$ на $[-2,2]$ принимает значения от $0$ (при $x=0$) до $64$ (при $x=\pm 2$). По теореме Чебышёва, лучшая константа --- середина диапазона:
+$$\boxed{c_{\text{равн}} = \frac{0 + 64}{2} = 32, \quad \text{погрешность} = 32.}$$
+
+\textbf{Среднеквадратичная норма.} Ищем $c = \operatorname{argmin}_c \int_{-2}^{2}(x^6 - c)^2\,dx$.
+Условие минимума:
+$$\frac{d}{dc}\int_{-2}^{2}(x^6 - c)^2\,dx = -2\int_{-2}^{2}(x^6 - c)\,dx = 0 \;\Rightarrow\; \int_{-2}^{2}x^6\,dx = \int_{-2}^{2}c\,dx.$$
+$$\int_{-2}^{2}x^6\,dx = 2\cdot\frac{2^7}{7} = \frac{256}{7}, \quad \int_{-2}^{2}c\,dx = 4c.$$
+$$c = \frac{256}{28} = \frac{64}{7} \approx 9,143.$$
+$$\boxed{c_{\text{скв}} = \frac{64}{7} \approx 9,143.}$$
+
+\textbf{Сравнение:} $c_{\text{равн}} = 32$ сильно отличается от $c_{\text{скв}} \approx 9,14$. Равномерная норма ``боится'' больших отклонений на краях (где $x^6 = 64$), поэтому константа сдвигается вверх. Среднеквадратичная норма ``усредняет'' функцию по всему отрезку, и поскольку $x^6$ мала на большей части $[-2,2]$, константа получается значительно меньше.
+
+\vspace{0.5cm}
+\subsection*{Задача 16. QR-разложение и МНК}
+\textbf{Условие:}
+$$A = \begin{pmatrix} 1 & 1 \\ 1 & -1 \\ 2 & 0 \\ 0 & 2 \end{pmatrix}, \quad b = \begin{pmatrix} 1 \\ 2 \\ 0 \\ 1 \end{pmatrix}.$$
+Построить тонкое QR-разложение и решить задачу МНК из $Rx = Q^\text{T}b$.
+
+\textbf{Теория.} Тонкое QR-разложение: $A = QR$, где $Q$ --- матрица $m\times n$ с ортонормированными столбцами ($Q^\text{T}Q = E$), $R$ --- верхнетреугольная $n\times n$. Нормальные уравнения $A^\text{T}Ax = A^\text{T}b$ превращаются в $R^\text{T}Q^\text{T}QRx = R^\text{T}Q^\text{T}b \Rightarrow Rx = Q^\text{T}b$.
+
+\textbf{Построение QR (процесс Грама--Шмидта).} Столбцы $A$: $a_1 = (1,1,2,0)^\text{T}$, $a_2 = (1,-1,0,2)^\text{T}$.
+
+\textit{Шаг 1:} $\|a_1\| = \sqrt{1+1+4+0} = \sqrt{6}$.
+$$q_1 = \frac{a_1}{\sqrt{6}} = \frac{1}{\sqrt{6}}(1,\,1,\,2,\,0)^\text{T}, \quad r_{11} = \sqrt{6}.$$
+
+\textit{Шаг 2:} $r_{12} = q_1^\text{T}a_2 = \frac{1-1+0+0}{\sqrt{6}} = 0$. Столбцы уже ортогональны!
+$\|a_2\| = \sqrt{1+1+0+4} = \sqrt{6}$.
+$$q_2 = \frac{a_2}{\sqrt{6}} = \frac{1}{\sqrt{6}}(1,\,-1,\,0,\,2)^\text{T}, \quad r_{22} = \sqrt{6}.$$
+
+$$Q = \frac{1}{\sqrt{6}}\begin{pmatrix} 1 & 1 \\ 1 & -1 \\ 2 & 0 \\ 0 & 2 \end{pmatrix}, \quad R = \begin{pmatrix} \sqrt{6} & 0 \\ 0 & \sqrt{6} \end{pmatrix}.$$
+
+\textbf{Решение МНК.}
+$$Q^\text{T}b = \frac{1}{\sqrt{6}}\begin{pmatrix} 1 & 1 & 2 & 0 \\ 1 & -1 & 0 & 2 \end{pmatrix}\begin{pmatrix} 1 \\ 2 \\ 0 \\ 1 \end{pmatrix} = \frac{1}{\sqrt{6}}\begin{pmatrix} 3 \\ 1 \end{pmatrix}.$$
+$$Rx = Q^\text{T}b \;\Rightarrow\; \begin{cases} \sqrt{6}\,x_1 = 3/\sqrt{6} \Rightarrow x_1 = 1/2, \\ \sqrt{6}\,x_2 = 1/\sqrt{6} \Rightarrow x_2 = 1/6. \end{cases}$$
+$$\boxed{x = \begin{pmatrix} 1/2 \\ 1/6 \end{pmatrix} \approx \begin{pmatrix} 0,500 \\ 0,167 \end{pmatrix}.}$$
+
+\vspace{0.5cm}
+\subsection*{Задача 17. Разностная формула повышенного порядка}
+\textbf{Условие:} по значениям в $x-2h,\, x-h,\, x,\, x+h,\, x+2h$ построить формулу максимального порядка для $f'(x)$. При $|f^{(5)}|\le 90$ и ошибке значений $2{,}5\cdot 10^{-6}$ найти оценки аппроксимационной и округлительной ошибок и оптимальный шаг.
+
+\textbf{Метод неопределённых коэффициентов.} Шаблон симметричный (5 точек), производная нечётная (первая) $\Rightarrow$ коэффициенты антисимметричны: $c_{-k} = -c_k$, $c_0 = 0$. Порядок аппроксимации: $5 - 1 = 4$.
+$$f'(x) \approx \frac{c_1(f(x+h)-f(x-h)) + c_2(f(x+2h)-f(x-2h))}{h}.$$
+
+Разложения Тейлора:
+$$f(x+h)-f(x-h) = 2hf' + \frac{2h^3}{6}f''' + \frac{2h^5}{120}f^{(5)} + \dots$$
+$$f(x+2h)-f(x-2h) = 4hf' + \frac{16h^3}{6}f''' + \frac{64h^5}{120}f^{(5)} + \dots$$
+
+Условия (приравниваем коэффициент при $f'$ к 1, при $h^2 f'''$ к 0):
+$$\begin{cases} 2c_1 + 4c_2 = 1, \\ \frac{2}{6}c_1 + \frac{16}{6}c_2 = 0 \Rightarrow c_1 + 8c_2 = 0. \end{cases}$$
+Из второго: $c_1 = -8c_2$. Подставляем: $-16c_2 + 4c_2 = 1 \Rightarrow c_2 = -\tfrac{1}{12}$, $c_1 = \tfrac{2}{3}$.
+
+\textbf{Формула:}
+$$\boxed{f'(x) \approx \frac{-f(x-2h) + 8f(x-h) - 8f(x+h) + f(x+2h)}{12h}.}$$
+
+\textbf{Аппроксимационная погрешность.} Коэффициент при $h^4 f^{(5)}$:
+$$\frac{1}{h}\left(\frac{2}{3}\cdot\frac{2}{120} - \frac{1}{12}\cdot\frac{64}{120}\right)h^4 f^{(5)} = \frac{1}{h}\cdot\frac{4-64}{360}\,h^5 f^{(5)} = -\frac{h^4}{30}f^{(5)}(\xi).$$
+$$|R_{\text{мет}}| \le \frac{90}{30}\,h^4 = 3h^4.$$
+
+\textbf{Округлительная погрешность.} Сумма модулей коэффициентов: $\frac{1+8+8+1}{12} = \frac{18}{12} = \frac{3}{2}$.
+$$|R_{\text{окр}}| \le \frac{3}{2}\cdot\frac{\varepsilon}{h} = \frac{1{,}5\cdot 2{,}5\cdot 10^{-6}}{h} = \frac{3{,}75\cdot 10^{-6}}{h}.$$
+
+
+\textbf{Оптимальный шаг.} Минимизируем $\Delta(h) = 3h^4 + \dfrac{3{,}75\cdot 10^{-6}}{h}$:
+$$\Delta'(h) = 12h^3 - \frac{3{,}75\cdot 10^{-6}}{h^2} = 0 \;\Rightarrow\; h^5 = \frac{3{,}75\cdot 10^{-6}}{12} = 3{,}125\cdot 10^{-7}.$$
+$$\boxed{h_{\text{opt}} = (3{,}125\cdot 10^{-7})^{1/5} = 0{,}05.}$$
+$$\Delta_{\min} = 3\cdot(0{,}05)^4 + \frac{3{,}75\cdot 10^{-6}}{0{,}05} = 3\cdot 6{,}25\cdot 10^{-6} + 7{,}5\cdot 10^{-5} = 1{,}875\cdot 10^{-5} + 7{,}5\cdot 10^{-5} = 9{,}375\cdot 10^{-5}.$$
+
+
+
+
+
+
+
+
+\end{document}

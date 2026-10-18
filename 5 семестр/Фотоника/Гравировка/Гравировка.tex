@@ -1,0 +1,212 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[a4paper,top=1.5cm, bottom=1.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{graphicx} % Required for inserting images
+%%% Работа с русским языком
+\usepackage{cmap}					% поиск в PDF
+\usepackage{mathtext} 				% русские буквы в фомулах
+\usepackage[T2A]{fontenc}			% кодировка
+\usepackage[utf8]{inputenc}			% кодировка исходного текста
+\usepackage[english,russian]{babel}	% локализация и переносы
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{multirow}
+
+\usepackage[unicode, colorlinks=true, urlcolor=blue]{hyperref}
+\usepackage[rgb]{xcolor}
+\hypersetup{
+colorlinks=true,urlcolor=blue
+}
+%%% Дополнительная работа с математикой
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} % AMS
+\usepackage{icomma} % "Умная" запятая: $0,2$ --- число, $0, 2$ --- перечисление
+%% Номера формул
+\mathtoolsset{showonlyrefs=true} % Показывать номера только у тех формул, на которые есть \eqref{} в тексте.
+%% Шрифты
+\usepackage{euscript}	 % Шрифт Евклид
+\usepackage{mathrsfs} % Красивый матшрифт
+%% Свои команды
+\DeclareMathOperator{\sgn}{\mathop{sgn}}
+%% Перенос знаков в формулах (по Львовскому)
+\newcommand*{\hm}[1]{#1\nobreak\discretionary{}
+{\hbox{$\mathsurround=0pt #1$}}{}}
+
+
+\usepackage{indentfirst}
+% \usepackage[italicdiff]{physics}
+\graphicspath{{images/}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{array}
+\usepackage{ragged2e}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,decorations.markings,calc}
+\usetikzlibrary{arrows.meta, calc, patterns}
+
+
+
+
+
+
+
+\begin{document}
+
+
+
+\include{titlepage}
+\begin{titlepage}
+\thispagestyle{empty}
+
+\begin{center}
+\small
+Министерство науки и высшего образования Российской Федерации\\[2mm]
+\textbf{ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ АВТОНОМНОЕ
+ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ ВЫСШЕГО ОБРАЗОВАНИЯ}\\[1mm]
+«МОСКОВСКИЙ ФИЗИКО-ТЕХНИЧЕСКИЙ ИНСТИТУТ\\
+(НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЕЛЬСКИЙ УНИВЕРСИТЕТ)»\\
+(МФТИ, Физтех)
+\end{center}
+
+\vspace{18mm}
+
+\begin{center}
+\large \textbf{КАФЕДРА КВАНТОВОЙ ЭЛЕКТРОНИКИ}\\[10mm]
+\Large \textbf{ОТЧЁТ}\\[2mm]
+\large \textbf{ПО ЛАБОРАТОРНОЙ РАБОТЕ}\\[14mm]
+\Large \textbf{Использование твердотельного YAG:Nd$^{3+}$-лазера с модуляцией добротности для гравировки материалов}
+\end{center}
+
+\vfill
+
+% Блоки с подписями слева, линии и пояснения справа
+\noindent
+\begin{tabular}{@{}p{0.44\linewidth}p{0.52\linewidth}@{}}
+\textit{Работу выполнили:} & Вакорина Анастасия,
+
+Винокуров Владислав,
+
+Выгнанчук Валерия,
+
+Ескина Ольга,
+
+Рагозина Елизавета,
+
+Струков Олег,
+
+Группа Б04-404 \\[8mm]
+
+\textit{Работу принял, оценка:} & \\[3mm]
+ \\
+\end{tabular}
+
+
+\vspace{12mm}
+
+\begin{center}
+\small Долгопрудный, \the\year{}~г.
+\end{center}
+
+\end{titlepage}
+
+
+
+
+
+
+
+
+\newpage
+
+
+
+\section*{Условие задачи}
+Летит ракета со скоростью $v = 1$ км/с. Необходимо определить радиус пучка и параметры фокусирующей линзы, чтобы сфокусировать луч лазера на ракете, а также найти расстояние, которое пролетит ракета до её сбития. 
+Сбить ракету означает проделать в ней отверстие радиуса $r = 5$ см и глубиной $h = 5$ мм. 
+Начальное расстояние до ракеты $L = 100$ км. 
+Материал ракеты --- алюминий (Al). Мощность лазера $P = 0,5$ МВт, длина волны $\lambda = 1{,}064$ мкм.
+
+\section*{Решение}
+
+\subsection*{Расчёт энергии для пробития отверстия}
+Объём удаляемого материала (цилиндр):
+\[
+V = \pi r^2 h = \pi \cdot (0{,}05)^2 \cdot 0{,}005 = 1{,}25\pi \cdot 10^{-5} \approx 3{,}927 \cdot 10^{-5} \text{ м}^3.
+\]
+Масса алюминия (плотность $\rho \approx 2700 \text{ кг/м}^3$):
+\[
+m = \rho V \approx 2700 \cdot 3{,}927 \cdot 10^{-5} \approx 0{,}106 \text{ кг}.
+\]
+Удельная энергия разрушения $q$ включает нагрев до плавления, плавление, нагрев жидкости до кипения и испарение. Справочные значения для Al в системе СИ:
+\begin{itemize}[label={---}]
+    \item $c_{\text{тв}} \approx 900 \text{ Дж/(кг}\cdot\text{К)}$, $T_{\text{пл}} \approx 933 \text{ К}$, $T_0 \approx 300 \text{ К} \Rightarrow \Delta T_1 = 633 \text{ К}$.
+    \item $\lambda_{\text{пл}} \approx 3{,}97 \cdot 10^5 \text{ Дж/кг}$.
+    \item $c_{\text{ж}} \approx 1100 \text{ Дж/(кг}\cdot\text{К)}$, $T_{\text{кип}} \approx 2740 \text{ К} \Rightarrow \Delta T_2 = 1807 \text{ К}$.
+    \item $L_{\text{пар}} \approx 1{,}05 \cdot 10^7 \text{ Дж/кг}$.
+\end{itemize}
+
+Суммируем удельную энергию:
+\begin{align*}
+q &= c_{\text{тв}}\Delta T_1 + \lambda_{\text{пл}} + c_{\text{ж}}\Delta T_2 + L_{\text{пар}} \\
+q &\approx (5{,}7 \cdot 10^5) + (0{,}0397 \cdot 10^7) + (0{,}1988 \cdot 10^7) + (1{,}05 \cdot 10^7) \approx 1{,}345 \cdot 10^7 \text{ Дж/кг}.
+\end{align*}
+Полная энергия, необходимая для испарения объёма (считаем, что 100\% энергии лазера идёт на разрушение):
+\[
+E = m \cdot q \approx 0{,}106 \cdot 1{,}345 \cdot 10^7 \approx 1{,}426 \cdot 10^6 \text{ Дж} = 1{,}426 \text{ МДж}.
+\]
+
+\subsection*{Время полёта и расстояние до сбития}
+Время, за которое лазер проделает отверстие:
+\[
+t = \frac{E}{P} = \frac{1{,}426 \cdot 10^6 \text{ Дж}}{5 \cdot 10^5 \text{ Вт}} \approx 2{,}852 \text{ с}.
+\]
+Расстояние, которое пролетит ракета за это время:
+\[
+S = v \cdot t = 1000 \text{ м/с} \cdot 2{,}852 \text{ с} = 2852 \text{ м} \approx 2{,}85 \text{ км}.
+\]
+
+\subsection*{Расчёт оптической системы (Гауссов пучок)}
+Для фокусировки луча в пятно радиусом $r = 5$ см на расстоянии $L = 100$ км необходимо, чтобы перетяжка гауссова пучка $w_0$ находилась на цели. Таким образом, $w_0 = 0{,}05$ м. Фокусировку будем осуществлять с помощью собирающей линзы.
+
+Найдём конфокальный параметр (длину Рэлея) в плоскости цели:
+\[
+z_R = \frac{\pi w_0^2}{\lambda} = \frac{\pi \cdot (0{,}05)^2}{1{,}064 \cdot 10^{-6}} = \frac{\pi \cdot 0{,}0025}{1{,}064 \cdot 10^{-6}} \approx 7389{,}7 \text{ м} \approx 7{,}39 \text{ км}.
+\]
+
+\textbf{Радиус пучка на фокусирующей линзе} (которая находится на расстоянии $L$ от перетяжки):
+\[
+w_L = w_0 \sqrt{1 + \left(\frac{L}{z_R}\right)^2} = 0{,}05 \cdot \sqrt{1 + \left(\frac{10^5}{7389{,}7}\right)^2} = 0{,}05 \cdot \sqrt{1 + 13{,}53^2} \approx 0{,}05 \cdot 13{,}57 \approx 0{,}678 \text{ м}.
+\]
+Это означает, что перед линзой пучок должен быть расширен телескопом до радиуса $\approx 67{,}8$ см.
+
+\textbf{Радиус кривизны волнового фронта} в плоскости линзы:
+\[
+R_L = L \left[ 1 + \left(\frac{z_R}{L}\right)^2 \right] = 10^5 \cdot \left[ 1 + \left(\frac{7389{,}7}{10^5}\right)^2 \right] = 10^5 \cdot [1 + 0{,}00546] \approx 100\,546 \text{ м}.
+\]
+Переводим в километры: $R_L \approx 100{,}55$ км.
+
+Чтобы линза сфокусировала пучок на расстоянии $L$, она должна сообщить волновому фронту кривизну, равную её фокусному расстоянию $f$. Следовательно, требуемое фокусное расстояние линзы:
+\[
+f = R_L \approx 100{,}55 \text{ км}.
+\]
+Радиус кривизны волнового фронта пучка ($R_L$) и фокусное расстояние линзы ($f$) в данной задаче численно совпадают, так как линза преобразует сходящийся фронт в плоский (в перетяжке).% Если бы мы использовали сферическое зеркало, его геометрический радиус кривизны был бы равен $R_c = 2f \approx 201$ км.}
+
+\section*{Ответ}
+\begin{enumerate}
+    \item \textbf{Энергия для сбития:} $E \approx 1{,}43$ МДж.
+    \item \textbf{Расстояние, которое пролетит ракета до сбития:} $S \approx 2{,}85$ км.
+    \item \textbf{Радиус пучка на фокусирующей линзе:} $w_L \approx 0{,}678$ м (или $67{,}8$ см).
+    \item \textbf{Фокусное расстояние линзы (радиус кривизны волнового фронта):} $f \approx 100{,}55$ км.
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,1403 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=2cm}
+
+\begin{document}
+
+
+\section*{Задача I.6.6}
+
+\textbf{Условие:} Пусть функция $f(x)$ задана таблично: заданы значения аргументов $x_0 < x_1 < x_2 < \ldots < x_N$ (расстояние между двумя соседними точками $h$) и значения функции в них $f_0, f_1, \ldots, f_N$.
+
+Самостоятельно выведите формулу вычисления \textit{односторонней} производной для приближенного вычисления $f'(x)$ в точках $x_0$ и $x_N$ с точностью до $O(h^2)$ и $O(h^3)$. Найдите оптимальные шаги численного дифференцирования. Сравните их с оценками для центральных разностей.
+
+\vspace{0.5cm}
+\textbf{Решение:}
+
+\subsection*{1. Формула односторонней разности второго порядка $O(h^2)$}
+
+Ищем приближение для $f'(x_0)$ в виде:
+\begin{equation}
+f'(x_0) \approx \frac{a_0 f(x_0) + a_1 f(x_1) + a_2 f(x_2)}{h}.
+\label{eq:ansatz}
+\end{equation}
+
+Разложим $f(x_1)$ и $f(x_2)$ в ряд Тейлора в точке $x_0$:
+\begin{align}
+f(x_1) &= f(x_0) + h f'(x_0) + \frac{h^2}{2} f''(x_0) + \frac{h^3}{6} f'''(x_0) + O(h^4), \\
+f(x_2) &= f(x_0) + 2h f'(x_0) + 2h^2 f''(x_0) + \frac{4h^3}{3} f'''(x_0) + O(h^4).
+\end{align}
+
+Подставим в~\eqref{eq:ansatz} и сгруппируем по степеням $h$:
+\begin{align}
+\frac{a_0 f(x_0) + a_1 f(x_1) + a_2 f(x_2)}{h}
+&= \frac{a_0 + a_1 + a_2}{h} f(x_0) + (a_1 + 2a_2) f'(x_0) \nonumber \\
+&\quad + \frac{h}{2}(a_1 + 4a_2) f''(x_0) + \frac{h^2}{6}(a_1 + 8a_2) f'''(x_0) + O(h^3).
+\end{align}
+
+Чтобы это выражение приближало $f'(x_0)$ с точностью $O(h^2)$, приравниваем:
+\begin{equation}
+\begin{cases}
+a_0 + a_1 + a_2 = 0, \\
+a_1 + 2a_2 = 1, \\
+a_1 + 4a_2 = 0.
+\end{cases}
+\label{eq:system}
+\end{equation}
+
+Решаем: из третьего $a_1 = -4a_2$; подставляем во второе: $-2a_2 = 1 \Rightarrow a_2 = -\tfrac{1}{2}$, $a_1 = 2$, $a_0 = -\tfrac{3}{2}$.
+
+\begin{equation}
+\boxed{f'(x_0) \approx \frac{-3f(x_0) + 4f(x_1) - f(x_2)}{2h}.}
+\label{eq:forward_2}
+\end{equation}
+
+\textbf{Погрешность метода:}
+\begin{equation}
+E_{\text{мет}} = \frac{h^2}{6}(a_1 + 8a_2) f'''(x_0) = \frac{h^2}{6}(2 - 4) f'''(x_0) = -\frac{h^2}{3} f'''(x_0).
+\end{equation}
+
+\subsection*{2. Формула для точки $x_N$}
+
+Аналогично, для точки $x_N$ используем значения $f(x_N)$, $f(x_{N-1})$, $f(x_{N-2})$:
+\begin{equation}
+f'(x_N) \approx \frac{b_0 f(x_N) + b_1 f(x_{N-1}) + b_2 f(x_{N-2})}{h}.
+\end{equation}
+
+Подставляя разложения Тейлора и приравнивая коэффициенты, получаем систему:
+\begin{equation}
+\begin{cases}
+b_0 + b_1 + b_2 = 0, \\
+-(b_1 + 2b_2) = 1, \\
+b_1 + 4b_2 = 0.
+\end{cases}
+\end{equation}
+
+Решение: $b_2 = \tfrac{1}{2}$, $b_1 = -2$, $b_0 = \tfrac{3}{2}$.
+
+\begin{equation}
+\boxed{f'(x_N) \approx \frac{3f(x_N) - 4f(x_{N-1}) + f(x_{N-2})}{2h}.}
+\label{eq:backward_2}
+\end{equation}
+
+\subsection*{3. Формула третьего порядка $O(h^3)$}
+
+Для получения точности $O(h^3)$ нужно обнулить коэффициент при $f'''(x_0)$, что требует четырёх неизвестных. Ищем:
+\begin{equation}
+f'(x_0) \approx \frac{c_0 f(x_0) + c_1 f(x_1) + c_2 f(x_2) + c_3 f(x_3)}{h}.
+\end{equation}
+
+Разложения:
+\begin{align}
+f(x_1) &= f + h f' + \tfrac{h^2}{2} f'' + \tfrac{h^3}{6} f''' + \tfrac{h^4}{24} f^{(4)} + O(h^5), \\
+f(x_2) &= f + 2h f' + 2h^2 f'' + \tfrac{4h^3}{3} f''' + \tfrac{2h^4}{3} f^{(4)} + O(h^5), \\
+f(x_3) &= f + 3h f' + \tfrac{9h^2}{2} f'' + \tfrac{9h^3}{2} f''' + \tfrac{27h^4}{8} f^{(4)} + O(h^5).
+\end{align}
+
+Условия для точности $O(h^3)$:
+\begin{equation}
+\begin{cases}
+c_0 + c_1 + c_2 + c_3 = 0, \\
+c_1 + 2c_2 + 3c_3 = 1, \\
+c_1 + 4c_2 + 9c_3 = 0, \\
+c_1 + 8c_2 + 27c_3 = 0.
+\end{cases}
+\label{eq:system_3}
+\end{equation}
+
+Решаем: из третьего и четвёртого $4c_2 + 18c_3 = 0 \Rightarrow c_2 = -\tfrac{9}{2} c_3$; из второго и третьего $2c_2 + 6c_3 = -1 \Rightarrow -3c_3 = -1 \Rightarrow c_3 = \tfrac{1}{3}$, $c_2 = -\tfrac{3}{2}$, $c_1 = 3$, $c_0 = -\tfrac{11}{6}$.
+
+\begin{equation}
+\boxed{f'(x_0) \approx \frac{-11f(x_0) + 18f(x_1) - 9f(x_2) + 2f(x_3)}{6h}.}
+\label{eq:forward_3}
+\end{equation}
+
+\textbf{Погрешность:}
+\begin{equation}
+E_{\text{мет}} = \frac{h^3}{24}(c_1 + 16c_2 + 81c_3) f^{(4)}(x_0) = \frac{h^3}{24}(3 - 24 + 27) f^{(4)}(x_0) = \frac{h^3}{4} f^{(4)}(x_0).
+\end{equation}
+
+\textbf{Ответ на вопрос задачи:} Для получения формулы третьего порядка аппроксимации нужно взять \textbf{четыре члена} (значения функции в четырёх точках).
+
+\subsection*{4. Оптимальный шаг дифференцирования}
+
+Полная погрешность численного дифференцирования складывается из погрешности метода и погрешности вычислений (ошибок округления). Если каждое значение функции вычислено с абсолютной погрешностью $\varepsilon$, то округлительная погрешность формулы равна
+$$
+E_{\text{окр}} = \frac{\sum |c_i|}{h}\,\varepsilon,
+$$
+где $c_i$ --- коэффициенты в числителе формулы.
+
+\textbf{Для формулы второго порядка~\eqref{eq:forward_2}:}
+Коэффициенты в числителе: $-\tfrac{3}{2},\, 2,\, -\tfrac{1}{2}$. Сумма модулей:
+$$
+\left|-\tfrac{3}{2}\right| + |2| + \left|-\tfrac{1}{2}\right| = \tfrac{3}{2} + 2 + \tfrac{1}{2} = 4.
+$$
+Полная погрешность:
+\begin{equation}
+E_{\text{полн}} \approx \frac{h^2}{3} |f'''(x_0)| + \frac{4\varepsilon}{h}.
+\end{equation}
+
+Минимизируем по $h$:
+\begin{equation}
+\frac{dE_{\text{полн}}}{dh} = \frac{2h}{3} |f'''(x_0)| - \frac{4\varepsilon}{h^2} = 0 \implies h^3 = \frac{6\varepsilon}{|f'''(x_0)|}.
+\end{equation}
+
+\begin{equation}
+\boxed{h_{\text{opt}}^{(2)} = \left(\frac{6\varepsilon}{|f'''(x_0)|}\right)^{1/3} \sim \varepsilon^{1/3}.}
+\end{equation}
+
+\textbf{Для формулы третьего порядка~\eqref{eq:forward_3}:}
+Коэффициенты в числителе: $-\tfrac{11}{6},\, 3,\, -\tfrac{3}{2},\, \tfrac{1}{3}$. Сумма модулей:
+$$
+\tfrac{11}{6} + 3 + \tfrac{3}{2} + \tfrac{1}{3} = \frac{11 + 18 + 9 + 2}{6} = \frac{40}{6} = \frac{20}{3}.
+$$
+Полная погрешность:
+\begin{equation}
+E_{\text{полн}} \approx \frac{h^3}{4} |f^{(4)}(x_0)| + \frac{20\varepsilon}{3h}.
+\end{equation}
+
+Минимизируем:
+\begin{equation}
+\frac{dE_{\text{полн}}}{dh} = \frac{3h^2}{4} |f^{(4)}(x_0)| - \frac{20\varepsilon}{3h^2} = 0 \implies h^4 = \frac{80\varepsilon}{9|f^{(4)}(x_0)|}.
+\end{equation}
+
+\begin{equation}
+\boxed{h_{\text{opt}}^{(3)} = \left(\frac{80\varepsilon}{9|f^{(4)}(x_0)|}\right)^{1/4} \sim \varepsilon^{1/4}.}
+\end{equation}
+
+\subsection*{5. Сравнение с центральными разностями}
+
+\textbf{Центральная разность второго порядка:}
+\begin{equation}
+f'(x) \approx \frac{f(x+h) - f(x-h)}{2h}, \quad E_{\text{мет}} = \frac{h^2}{6} |f'''(x)|.
+\end{equation}
+Сумма модулей коэффициентов в числителе: $1 + 1 = 2$, делённая на $2$ --- получаем $1$. Округлительная погрешность: $\varepsilon/h$.
+\begin{equation}
+E_{\text{полн}} \approx \frac{h^2}{6} |f'''| + \frac{\varepsilon}{h} \implies h_{\text{opt}}^{\text{centr},2} = \left(\frac{3\varepsilon}{|f'''(x)|}\right)^{1/3} \sim \varepsilon^{1/3}.
+\end{equation}
+
+\textbf{Центральная разность четвёртого порядка:}
+\begin{equation}
+f'(x) \approx \frac{-f(x+2h) + 8f(x+h) - 8f(x-h) + f(x-2h)}{12h}, \quad E_{\text{мет}} = \frac{h^4}{30} |f^{(5)}(x)|.
+\end{equation}
+Сумма модулей коэффициентов в числителе: $1 + 8 + 8 + 1 = 18$, делённая на $12$ --- получаем $\tfrac{3}{2}$. Округлительная погрешность: $\tfrac{3\varepsilon}{2h}$.
+\begin{equation}
+E_{\text{полн}} \approx \frac{h^4}{30} |f^{(5)}| + \frac{3\varepsilon}{2h} \implies h_{\text{opt}}^{\text{centr},4} = \left(\frac{45\varepsilon}{4|f^{(5)}(x)|}\right)^{1/5} \sim \varepsilon^{1/5}.
+\end{equation}
+
+\textbf{Сравнение:}
+\begin{itemize}
+\item Односторонние и центральные разности одного и того же порядка аппроксимации имеют одинаковую зависимость оптимального шага от $\varepsilon$: $\varepsilon^{1/3}$ для второго порядка, $\varepsilon^{1/4}$ для третьего и $\varepsilon^{1/5}$ для четвёртого.
+\item Однако односторонние разности требуют \textit{большего числа точек} для достижения того же порядка: для $O(h^2)$ --- 3 точки (против 2 у центральной), для $O(h^3)$ --- 4 точки (а центральная при 4 точках даёт уже $O(h^4)$).
+\item Центральные разности всегда предпочтительнее во внутренних узлах сетки, когда есть возможность использовать точки с обеих сторон. Односторонние формулы необходимы только на границах.
+\end{itemize}
+
+\subsection*{Итог}
+
+\begin{itemize}
+\item Формула односторонней разности второго порядка: $f'(x_0) \approx \dfrac{-3f(x_0) + 4f(x_1) - f(x_2)}{2h}$.
+\item Формула односторонней разности третьего порядка: $f'(x_0) \approx \dfrac{-11f(x_0) + 18f(x_1) - 9f(x_2) + 2f(x_3)}{6h}$.
+\item Для третьего порядка нужно 4 члена.
+\item Оптимальный шаг для второго порядка: $h_{\text{opt}} \sim \varepsilon^{1/3}$, точная формула $h_{\text{opt}}^{(2)} = \left(\dfrac{6\varepsilon}{|f'''|}\right)^{1/3}$.
+\item Оптимальный шаг для третьего порядка: $h_{\text{opt}} \sim \varepsilon^{1/4}$, точная формула $h_{\text{opt}}^{(3)} = \left(\dfrac{80\varepsilon}{9|f^{(4)}|}\right)^{1/4}$.
+\item Центральные разности эффективнее односторонних при том же порядке точности.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section*{Задача I.8.6}
+
+\textbf{Условие:} Найти линейную оценку погрешности для функции $u = t^5$, если заданы точка приближения $t^* = \sqrt{2}$, значение функции $u^*$ в этой точке и погрешность $\Delta t^* = 0{,}1$.
+
+\vspace{0.5cm}
+\textbf{Решение:}
+
+\subsection*{1. Исходные данные}
+
+Задана функция:
+\begin{equation}
+u(t) = t^5.
+\end{equation}
+
+Приближённое значение аргумента:
+\begin{equation}
+t^* = \sqrt{2} \approx 1{,}4142.
+\end{equation}
+
+Абсолютная погрешность аргумента:
+\begin{equation}
+\Delta t^* = 0{,}1.
+\end{equation}
+
+Значение функции в точке приближения:
+\begin{equation}
+u^* = u(t^*) = (\sqrt{2})^5 = 4\sqrt{2} \approx 5{,}6569.
+\end{equation}
+
+\subsection*{2. Формула линейной оценки погрешности}
+
+Если функция $u(t)$ дифференцируема в окрестности точки $t^*$, то абсолютная погрешность функции $\Delta u^*$ оценивается по формуле:
+\begin{equation}
+\Delta u^* \approx \left| \frac{du}{dt}\bigg|_{t = t^*} \right| \cdot \Delta t^*.
+\label{eq:lin_err_86}
+\end{equation}
+
+Эта формула следует из разложения функции в ряд Тейлора в окрестности точки $t^*$ с отбрасыванием членов второго и высших порядков малости (линеаризация).
+
+\subsection*{3. Вычисление производной}
+
+Найдём производную функции $u(t) = t^5$:
+\begin{equation}
+\frac{du}{dt} = 5t^4.
+\end{equation}
+
+Вычислим значение производной в точке $t^* = \sqrt{2}$:
+\begin{equation}
+\frac{du}{dt}\bigg|_{t = \sqrt{2}} = 5(\sqrt{2})^4 = 5 \cdot 4 = 20.
+\end{equation}
+
+\subsection*{4. Линейная оценка абсолютной погрешности}
+
+Подставим найденные значения в формулу~\eqref{eq:lin_err_86}:
+\begin{equation}
+\Delta u^* \approx |20| \cdot 0{,}1 = 2.
+\end{equation}
+
+Таким образом, линейная оценка абсолютной погрешности функции $u = t^5$ при $t^* = \sqrt{2}$ и $\Delta t^* = 0{,}1$ равна:
+\begin{equation}
+\boxed{\Delta u^* \approx 2.}
+\end{equation}
+
+\subsection*{5. Относительная погрешность}
+
+Относительная погрешность функции определяется как:
+\begin{equation}
+\delta u^* = \frac{\Delta u^*}{|u^*|} = \frac{2}{4\sqrt{2}} = \frac{1}{2\sqrt{2}} = \frac{\sqrt{2}}{4} \approx 0{,}354.
+\end{equation}
+
+Таким образом, относительная погрешность составляет примерно $35{,}4\%$, что значительно больше относительной погрешности аргумента $\delta t^* = \Delta t^*/|t^*| = 0{,}1/\sqrt{2} \approx 0{,}071$ ($7{,}1\%$). Это связано с тем, что функция $t^5$ быстро растёт, и её производная в точке $t^* = \sqrt{2}$ велика ($20$), что приводит к сильному усилению погрешности.
+
+\subsection*{6. Проверка результата}
+
+Для контроля вычислим точные значения функции на границах интервала 
+неопределённости аргумента $t \in [t^* - \Delta t^*,\, t^* + \Delta t^*] 
+= [\sqrt{2} - 0{,}1;\, \sqrt{2} + 0{,}1] \approx [1{,}3142;\, 1{,}5142]$:
+\begin{align}
+u(\sqrt{2} - 0{,}1) &= (1{,}3142)^5 \approx 3{,}920, \\
+u(\sqrt{2} + 0{,}1) &= (1{,}5142)^5 \approx 7{,}960.
+\end{align}
+
+Максимальное отклонение от $u^* = 4\sqrt{2} \approx 5{,}657$:
+\begin{equation}
+\max\bigl(|u(\sqrt{2} - 0{,}1) - u^*|,\; |u(\sqrt{2} + 0{,}1) - u^*|\bigr) 
+= \max(1{,}737;\, 2{,}303) \approx 2{,}303.
+\end{equation}
+
+Линейная оценка $\Delta u^* \approx 2$ близка к точному значению $2{,}303$, 
+что подтверждает корректность применения формулы~\eqref{eq:lin_err_86}. 
+Расхождение объясняется отброшенными членами высшего порядка малости 
+в разложении Тейлора: поскольку функция $t^5$ имеет большую вторую 
+производную ($u''(t) = 20t^3$, $u''(\sqrt{2}) = 40\sqrt{2} \approx 56{,}6$), 
+квадратичный член вносит заметный вклад при $\Delta t^* = 0{,}1$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section*{Задача I.8.31}
+
+\textbf{Условие:} Дана неравномерная сетка $h_i = x_{i+1} - x_i$, $h_{i-1} = x_i - x_{i-1}$. Получить формулу для приближенного вычисления второй производной в точке $x_i$, оценить главный член погрешности аппроксимации. Найти оптимальный шаг численного дифференцирования при условии $h_{i-1} = 2h_i$. Какие требования необходимо наложить на гладкость функции?
+
+\vspace{0.5cm}
+\textbf{Решение:}
+
+\subsection*{1. Вывод формулы методом неопределенных коэффициентов}
+
+Ищем приближение для $f''(x_i)$ в виде:
+\begin{equation}
+f''(x_i) \approx \frac{a \cdot f(x_{i-1}) + b \cdot f(x_i) + c \cdot f(x_{i+1})}{h_i \cdot h_{i-1}}.
+\label{eq:ansatz}
+\end{equation}
+
+Разложим $f(x_{i-1})$ и $f(x_{i+1})$ в ряд Тейлора в точке $x_i$:
+\begin{align}
+f(x_{i+1}) &= f(x_i) + h_i f'(x_i) + \frac{h_i^2}{2} f''(x_i) + \frac{h_i^3}{6} f'''(x_i) + O(h_i^4), \\
+f(x_{i-1}) &= f(x_i) - h_{i-1} f'(x_i) + \frac{h_{i-1}^2}{2} f''(x_i) - \frac{h_{i-1}^3}{6} f'''(x_i) + O(h_{i-1}^4).
+\end{align}
+
+Подставим в~\eqref{eq:ansatz} и сгруппируем по степеням производных:
+\begin{align}
+\frac{a f(x_{i-1}) + b f(x_i) + c f(x_{i+1})}{h_i h_{i-1}} &= \frac{a + b + c}{h_i h_{i-1}} f(x_i) \nonumber \\
+&+ \frac{-a h_{i-1} + c h_i}{h_i h_{i-1}} f'(x_i) \nonumber \\
+&+ \frac{a h_{i-1}^2 + c h_i^2}{2 h_i h_{i-1}} f''(x_i) \nonumber \\
+&+ \frac{-a h_{i-1}^3 + c h_i^3}{6 h_i h_{i-1}} f'''(x_i) + O(h^2).
+\end{align}
+
+Для того чтобы это выражение приближало $f''(x_i)$, необходимо:
+\begin{equation}
+\begin{cases}
+a + b + c = 0 & \text{(коэффициент при } f(x_i) \text{ равен нулю)}, \\
+-a h_{i-1} + c h_i = 0 & \text{(коэффициент при } f'(x_i) \text{ равен нулю)}, \\
+a h_{i-1}^2 + c h_i^2 = 2 h_i h_{i-1} & \text{(коэффициент при } f''(x_i) \text{ равен единице)}.
+\end{cases}
+\label{eq:system}
+\end{equation}
+
+Решаем систему~\eqref{eq:system}:
+\begin{align}
+\text{Из второго уравнения:} \quad a &= c \frac{h_i}{h_{i-1}}. \\
+\text{Подставляем в третье:} \quad c \frac{h_i}{h_{i-1}} h_{i-1}^2 + c h_i^2 &= 2 h_i h_{i-1} \nonumber \\
+c h_i (h_{i-1} + h_i) &= 2 h_i h_{i-1} \nonumber \\
+c &= \frac{2 h_{i-1}}{h_{i-1} + h_i}. \\
+\text{Тогда:} \quad a &= \frac{2 h_i}{h_{i-1} + h_i}. \\
+\text{Из первого:} \quad b &= -(a + c) = -\frac{2(h_i + h_{i-1})}{h_{i-1} + h_i} = -2.
+\end{align}
+
+Подставляем в~\eqref{eq:ansatz}:
+\begin{equation}
+\boxed{f''(x_i) \approx \frac{2 h_i f(x_{i-1}) - 2(h_{i-1} + h_i) f(x_i) + 2 h_{i-1} f(x_{i+1})}{h_i h_{i-1} (h_{i-1} + h_i)}.}
+\label{eq:second_deriv}
+\end{equation}
+
+\subsection*{2. Главный член погрешности}
+
+Погрешность определяется коэффициентом при $f'''(x_i)$:
+\begin{align}
+E_{\text{мет}} &= \frac{-a h_{i-1}^3 + c h_i^3}{6 h_i h_{i-1}} f'''(x_i) \nonumber \\
+&= \frac{-2 h_i h_{i-1}^3 + 2 h_{i-1} h_i^3}{6 h_i h_{i-1} (h_{i-1} + h_i)} f'''(x_i) \nonumber \\
+&= \frac{2 h_i h_{i-1} (h_i^2 - h_{i-1}^2)}{6 h_i h_{i-1} (h_{i-1} + h_i)} f'''(x_i) \nonumber \\
+&= \frac{2 (h_i - h_{i-1})(h_i + h_{i-1})}{6 (h_{i-1} + h_i)} f'''(x_i) \nonumber \\
+&= \frac{h_i - h_{i-1}}{3} f'''(x_i).
+\end{align}
+
+Таким образом, главный член погрешности:
+\begin{equation}
+\boxed{E_{\text{мет}} = \frac{h_i - h_{i-1}}{3} f'''(x_i) + O(h^2).}
+\end{equation}
+
+\textbf{Замечание:} Если сетка равномерная ($h_i = h_{i-1} = h$), то погрешность $O(h^2)$, и формула переходит в стандартную центральную разность:
+\begin{equation}
+f''(x_i) \approx \frac{f(x_{i-1}) - 2 f(x_i) + f(x_{i+1})}{h^2}.
+\end{equation}
+
+\subsection*{3. Оптимальный шаг при $h_{i-1} = 2h_i$}
+
+При условии $h_{i-1} = 2h_i$ формула~\eqref{eq:second_deriv} упрощается:
+\begin{equation}
+f''(x_i) \approx \frac{2h_i f(x_{i-1}) - 6h_i f(x_i) + 4h_i f(x_{i+1})}{6h_i^3}
+= \frac{f(x_{i-1}) - 3f(x_i) + 2f(x_{i+1})}{3h_i^2}.
+\end{equation}
+
+Погрешность метода (по формуле из пункта~2):
+\begin{equation}
+|E_{\text{мет}}| = \left|\frac{h_i - 2h_i}{3}\right| |f'''(x_i)| = \frac{h_i}{3} |f'''(x_i)|.
+\end{equation}
+
+\textbf{Округлительная погрешность.} Сумма модулей коэффициентов формулы:
+\begin{equation}
+\frac{|1| + |-3| + |2|}{3h_i^2} = \frac{6}{3h_i^2} = \frac{2}{h_i^2}.
+\end{equation}
+Если каждое значение функции известно с абсолютной погрешностью $\varepsilon$, то:
+\begin{equation}
+E_{\text{выч}} = \frac{2\varepsilon}{h_i^2}.
+\end{equation}
+
+\textbf{Полная погрешность:}
+\begin{equation}
+E_{\text{полн}} \approx \frac{h_i}{3} |f'''(x_i)| + \frac{2\varepsilon}{h_i^2}.
+\end{equation}
+
+Минимизируем по $h_i$:
+\begin{equation}
+\frac{dE_{\text{полн}}}{dh_i} = \frac{|f'''(x_i)|}{3} - \frac{4\varepsilon}{h_i^3} = 0
+\implies h_i^3 = \frac{12\varepsilon}{|f'''(x_i)|}.
+\end{equation}
+
+\begin{equation}
+\boxed{h_{\text{opt}} = \left(\frac{12\varepsilon}{|f'''(x_i)|}\right)^{1/3} \sim \varepsilon^{1/3}.}
+\end{equation}
+
+\subsection*{4. Требования к гладкости функции}
+
+Для корректности вывода формулы необходимо, чтобы функция $f(x)$ была \textbf{трижды непрерывно дифференцируема} в окрестности точки $x_i$:
+\begin{equation}
+f \in C^3[x_{i-1}, x_{i+1}].
+\end{equation}
+
+Это требование следует из того, что мы использовали разложение Тейлора до третьего порядка включительно. Если функция имеет только две непрерывные производные, то остаточный член разложения нельзя оценить как $O(h^3)$, и формула теряет гарантированную точность.
+
+\subsection*{Итог}
+
+\begin{itemize}
+\item Формула для второй производной на неравномерной сетке:
+\begin{equation}
+f''(x_i) \approx \frac{2 h_i f(x_{i-1}) - 2(h_{i-1} + h_i) f(x_i) + 2 h_{i-1} f(x_{i+1})}{h_i h_{i-1} (h_{i-1} + h_i)}.
+\end{equation}
+\item Главный член погрешности: $E_{\text{мет}} = \frac{h_i - h_{i-1}}{3} f'''(x_i)$.
+\item Оптимальный шаг при $h_{i-1} = 2h_i$: $h_{\text{opt}} \sim \varepsilon_{\text{маш}}^{1/3}$.
+\item Требование к гладкости: $f \in C^3$.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section*{Задача II.7.37 (пункт в)}
+
+\textbf{Условие:} Найти область сходимости метода Якоби и метода Зейделя для системы с матрицей вида:
+\begin{equation}
+\mathbf{A} = \begin{pmatrix} \alpha & \beta & 0 \\ \beta & \alpha & 0 \\ 0 & 0 & \alpha \end{pmatrix}.
+\end{equation}
+
+\vspace{0.5cm}
+\textbf{Решение:}
+
+\subsection*{1. Предварительный анализ структуры матрицы}
+
+Матрица $\mathbf{A}$ имеет блочно-диагональную структуру:
+\begin{equation}
+\mathbf{A} = \begin{pmatrix} \mathbf{A}_{2\times 2} & \mathbf{0} \\ \mathbf{0} & \alpha \end{pmatrix}, \quad \text{где} \quad \mathbf{A}_{2\times 2} = \begin{pmatrix} \alpha & \beta \\ \beta & \alpha \end{pmatrix}.
+\end{equation}
+
+Поскольку третья строка и третий столбец содержат только диагональный элемент $\alpha$, третья компонента решения определяется независимо: $x_3 = f_3/\alpha$ (при $\alpha \neq 0$). Поэтому сходимость итерационных методов определяется только блоком $2\times 2$ в верхнем левом углу.
+
+\textbf{Замечание:} Блок $\mathbf{A}_{2\times 2}$ симметричен, поэтому согласно задаче II.7.39 методы Якоби и Зейделя для него сходятся и расходятся одновременно. Проверим это явно.
+
+\subsection*{2. Метод Якоби}
+
+Разложим $\mathbf{A} = \mathbf{D} - \mathbf{L} - \mathbf{U}$:
+\begin{equation}
+\mathbf{D} = \begin{pmatrix} \alpha & 0 & 0 \\ 0 & \alpha & 0 \\ 0 & 0 & \alpha \end{pmatrix}, \quad
+\mathbf{L} = \begin{pmatrix} 0 & 0 & 0 \\ -\beta & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix}, \quad
+\mathbf{U} = \begin{pmatrix} 0 & -\beta & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix}.
+\end{equation}
+
+Итерационная матрица метода Якоби:
+\begin{equation}
+\mathbf{R}_J = -\mathbf{D}^{-1}(\mathbf{L} + \mathbf{U}) = -\frac{1}{\alpha} \begin{pmatrix} 0 & -\beta & 0 \\ -\beta & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} = \begin{pmatrix} 0 & \beta/\alpha & 0 \\ \beta/\alpha & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix}.
+\end{equation}
+
+Найдём собственные значения из характеристического уравнения $\det(\mathbf{R}_J - \lambda \mathbf{I}) = 0$:
+\begin{equation}
+\det \begin{pmatrix} -\lambda & \beta/\alpha & 0 \\ \beta/\alpha & -\lambda & 0 \\ 0 & 0 & -\lambda \end{pmatrix} = -\lambda \left(\lambda^2 - \frac{\beta^2}{\alpha^2}\right) = 0.
+\end{equation}
+
+Собственные значения:
+\begin{equation}
+\lambda_1^{(J)} = 0, \quad \lambda_2^{(J)} = \frac{\beta}{\alpha}, \quad \lambda_3^{(J)} = -\frac{\beta}{\alpha}.
+\end{equation}
+
+Спектральный радиус:
+\begin{equation}
+\rho(\mathbf{R}_J) = \left|\frac{\beta}{\alpha}\right|.
+\end{equation}
+
+Метод Якоби сходится при $\rho(\mathbf{R}_J) < 1$, т.е.:
+\begin{equation}
+\boxed{|\beta| < |\alpha|.}
+\end{equation}
+
+\subsection*{3. Метод Зейделя}
+
+Итерационная матрица метода Зейделя:
+\begin{equation}
+\mathbf{R}_S = -(\mathbf{D} + \mathbf{L})^{-1} \mathbf{U}.
+\end{equation}
+
+Сначала найдём $(\mathbf{D} + \mathbf{L})^{-1}$:
+\begin{equation}
+\mathbf{D} + \mathbf{L} = \begin{pmatrix} \alpha & 0 & 0 \\ \beta & \alpha & 0 \\ 0 & 0 & \alpha \end{pmatrix}.
+\end{equation}
+
+Это нижнетреугольная матрица, её обратная также нижнетреугольна:
+\begin{equation}
+(\mathbf{D} + \mathbf{L})^{-1} = \begin{pmatrix} 1/\alpha & 0 & 0 \\ -\beta/\alpha^2 & 1/\alpha & 0 \\ 0 & 0 & 1/\alpha \end{pmatrix}.
+\end{equation}
+
+Теперь вычислим $\mathbf{R}_S$:
+\begin{align}
+\mathbf{R}_S &= -\begin{pmatrix} 1/\alpha & 0 & 0 \\ -\beta/\alpha^2 & 1/\alpha & 0 \\ 0 & 0 & 1/\alpha \end{pmatrix} \begin{pmatrix} 0 & -\beta & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} \nonumber \\
+&= -\begin{pmatrix} 0 & -\beta/\alpha & 0 \\ 0 & \beta^2/\alpha^2 & 0 \\ 0 & 0 & 0 \end{pmatrix} = \begin{pmatrix} 0 & \beta/\alpha & 0 \\ 0 & -\beta^2/\alpha^2 & 0 \\ 0 & 0 & 0 \end{pmatrix}.
+\end{align}
+
+Матрица $\mathbf{R}_S$ верхнетреугольна, поэтому её собственные значения равны диагональным элементам:
+\begin{equation}
+\lambda_1^{(S)} = 0, \quad \lambda_2^{(S)} = -\frac{\beta^2}{\alpha^2}, \quad \lambda_3^{(S)} = 0.
+\end{equation}
+
+Спектральный радиус:
+\begin{equation}
+\rho(\mathbf{R}_S) = \left(\frac{\beta}{\alpha}\right)^2 = \left[\rho(\mathbf{R}_J)\right]^2.
+\end{equation}
+
+Метод Зейделя сходится при $\rho(\mathbf{R}_S) < 1$, т.е.:
+\begin{equation}
+\left(\frac{\beta}{\alpha}\right)^2 < 1 \iff \boxed{|\beta| < |\alpha|.}
+\end{equation}
+
+\subsection*{4. Сравнение и вывод}
+
+Оба метода сходятся при одном и том же условии $|\beta| < |\alpha|$, что согласуется с результатом задачи II.7.39 для систем второго порядка (наш блок $2\times 2$ симметричен).
+
+При этом, если оба метода сходятся, метод Зейделя сходится \textbf{примерно в два раза быстрее} метода Якоби, поскольку:
+\begin{equation}
+\rho(\mathbf{R}_S) = [\rho(\mathbf{R}_J)]^2.
+\end{equation}
+
+Например, при $\beta/\alpha = 0.9$:
+\begin{itemize}
+\item $\rho(\mathbf{R}_J) = 0.9$ (медленная сходимость),
+\item $\rho(\mathbf{R}_S) = 0.81$ (заметно быстрее).
+\end{itemize}
+
+\subsection*{Итог}
+
+\begin{itemize}
+\item \textbf{Область сходимости метода Якоби:} $|\beta| < |\alpha|$.
+\item \textbf{Область сходимости метода Зейделя:} $|\beta| < |\alpha|$.
+\item Области сходимости совпадают.
+\item При сходимости метод Зейделя сходится быстрее (спектральный радиус в квадрате меньше).
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section*{Задача II.9.2 (пункт г)}
+
+\textbf{Условие:} Дана система линейных алгебраических уравнений $\mathbf{A}\mathbf{x} = \mathbf{b}$. Оценить максимально точную относительную погрешность $\|\Delta\mathbf{x}\|/\|\mathbf{x}\|$ в заданной норме. Найти вектор ошибки $\Delta\mathbf{b}$, на котором эта оценка достигается. При каком $\Delta\mathbf{b}$ относительная ошибка $\|\Delta\mathbf{x}\|/\|\mathbf{x}\|$ будет минимальной? Найти её.
+
+$$
+\mathbf{A} = \begin{pmatrix} 65 & 72 \\ 72 & 82 \end{pmatrix}, \quad 
+\mathbf{b} = \begin{pmatrix} 137 \\ 154 \end{pmatrix}, \quad 
+\frac{\|\Delta\mathbf{b}\|_3}{\|\mathbf{b}\|_3} = 0{,}01, \quad 
+\|\mathbf{x}\|_3 = \sqrt{(\mathbf{x}, \mathbf{x})}.
+$$
+
+\textit{Примечание:} индекс ``3'' в обозначении нормы --- это номер варианта задачи, а не третья норма. Формула $\|\mathbf{x}\|_3 = \sqrt{(\mathbf{x}, \mathbf{x})}$ задаёт стандартную евклидову норму $\|\cdot\|_2$.
+
+\vspace{0.5cm}
+\textbf{Решение:}
+
+\subsection*{1. Решение системы $\mathbf{A}\mathbf{x} = \mathbf{b}$}
+
+Найдём определитель матрицы $\mathbf{A}$:
+\begin{equation}
+\det(\mathbf{A}) = 65 \cdot 82 - 72 \cdot 72 = 5330 - 5184 = 146.
+\end{equation}
+
+Обратная матрица:
+\begin{equation}
+\mathbf{A}^{-1} = \frac{1}{146} \begin{pmatrix} 82 & -72 \\ -72 & 65 \end{pmatrix}.
+\end{equation}
+
+Решение системы $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$:
+\begin{equation}
+\mathbf{x} = \frac{1}{146} \begin{pmatrix} 82 & -72 \\ -72 & 65 \end{pmatrix} \begin{pmatrix} 137 \\ 154 \end{pmatrix} = \frac{1}{146} \begin{pmatrix} 82 \cdot 137 - 72 \cdot 154 \\ -72 \cdot 137 + 65 \cdot 154 \end{pmatrix} = \frac{1}{146} \begin{pmatrix} 11234 - 11088 \\ -9864 + 10010 \end{pmatrix} = \frac{1}{146} \begin{pmatrix} 146 \\ 146 \end{pmatrix} = \begin{pmatrix} 1 \\ 1 \end{pmatrix}.
+\end{equation}
+
+Итак, точное решение: $\mathbf{x} = (1, 1)^T$.
+
+\subsection*{2. Собственные значения и нормы матриц}
+
+Матрица $\mathbf{A}$ симметрична и положительно определена ($\det \mathbf{A} = 146 > 0$, $\operatorname{tr} \mathbf{A} = 147 > 0$), поэтому её сингулярные числа совпадают с собственными значениями. Найдём их из характеристического уравнения:
+\begin{equation}
+\det(\mathbf{A} - \lambda \mathbf{I}) = (65 - \lambda)(82 - \lambda) - 72^2 = \lambda^2 - 147\lambda + 146 = 0.
+\end{equation}
+
+Дискриминант: $D = 147^2 - 4 \cdot 146 = 21609 - 584 = 21025 = 145^2$.
+
+\begin{equation}
+\lambda_1 = \frac{147 - 145}{2} = 1, \qquad \lambda_2 = \frac{147 + 145}{2} = 146.
+\end{equation}
+
+В евклидовой норме:
+\begin{align}
+\|\mathbf{A}\|_2 &= \sigma_{\max}(\mathbf{A}) = \lambda_{\max} = 146, \\
+\|\mathbf{A}^{-1}\|_2 &= \frac{1}{\sigma_{\min}(\mathbf{A})} = \frac{1}{\lambda_{\min}} = 1.
+\end{align}
+
+Число обусловленности:
+\begin{equation}
+\operatorname{cond}(\mathbf{A}) = \|\mathbf{A}\|_2 \cdot \|\mathbf{A}^{-1}\|_2 = 146 \cdot 1 = 146.
+\end{equation}
+
+\subsection*{3. Нормы векторов}
+
+\begin{align}
+\|\mathbf{x}\|_2 &= \sqrt{1^2 + 1^2} = \sqrt{2}, \\
+\|\mathbf{b}\|_2 &= \sqrt{137^2 + 154^2} = \sqrt{18769 + 23716} = \sqrt{42485}, \\
+\|\Delta\mathbf{b}\|_2 &= 0{,}01 \cdot \|\mathbf{b}\|_2 = 0{,}01\sqrt{42485}.
+\end{align}
+
+\subsection*{4. Максимально точная оценка погрешности}
+
+Стандартная оценка через $\operatorname{cond}(\mathbf{A})$ даёт верхнюю границу:
+\begin{equation}
+\frac{\|\Delta\mathbf{x}\|_2}{\|\mathbf{x}\|_2} \leqslant \operatorname{cond}(\mathbf{A}) \cdot \frac{\|\Delta\mathbf{b}\|_2}{\|\mathbf{b}\|_2} = 146 \cdot 0{,}01 = 1{,}46.
+\end{equation}
+Эта оценка достижима только при ``худшем'' $\mathbf{b}$ (собственном векторе, соответствующем $\lambda_{\max}$). Поскольку наш $\mathbf{b}$ фиксирован, найдём точный максимум через \textbf{естественное число обусловленности}:
+\begin{equation}
+\nu(\mathbf{A}, \mathbf{b}) = \frac{\|\mathbf{A}^{-1}\|_2 \cdot \|\mathbf{b}\|_2}{\|\mathbf{A}^{-1}\mathbf{b}\|_2} = \frac{\|\mathbf{A}^{-1}\|_2 \cdot \|\mathbf{b}\|_2}{\|\mathbf{x}\|_2} = \frac{1 \cdot \sqrt{42485}}{\sqrt{2}} = \sqrt{\frac{42485}{2}} = \sqrt{21242{,}5} \approx 145{,}75.
+\end{equation}
+
+Точная максимальная оценка:
+\begin{equation}
+\frac{\|\Delta\mathbf{x}\|_2}{\|\mathbf{x}\|_2} \leqslant \nu(\mathbf{A}, \mathbf{b}) \cdot \frac{\|\Delta\mathbf{b}\|_2}{\|\mathbf{b}\|_2} = \sqrt{21242{,}5} \cdot 0{,}01 \approx 1{,}4575.
+\end{equation}
+
+Заметим, что $\nu(\mathbf{A}, \mathbf{b}) \approx 145{,}75$ очень близко к $\operatorname{cond}(\mathbf{A}) = 146$, поскольку отношение $\|\mathbf{b}\|_2/\|\mathbf{x}\|_2 = \sqrt{42485}/\sqrt{2} \approx 145{,}75$ близко к $\|\mathbf{A}\|_2 = 146$. Это означает, что вектор $\mathbf{b}$ почти совпадает с ``худшим'' направлением.
+
+\subsection*{5. Вектор $\Delta\mathbf{b}$, на котором достигается максимум}
+
+Максимум $\|\mathbf{A}^{-1}\Delta\mathbf{b}\|_2/\|\Delta\mathbf{b}\|_2$ в евклидовой норме достигается на собственном векторе матрицы $\mathbf{A}^{-1}$, соответствующем её наибольшему собственному значению $1/\lambda_{\min} = 1$.
+
+Найдём собственный вектор $\mathbf{A}$ для $\lambda_1 = 1$:
+\begin{equation}
+(\mathbf{A} - \mathbf{I})\mathbf{v} = \begin{pmatrix} 64 & 72 \\ 72 & 81 \end{pmatrix} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} = \mathbf{0} \implies 64v_1 + 72v_2 = 0 \implies \frac{v_1}{v_2} = -\frac{72}{64} = -\frac{9}{8}.
+\end{equation}
+
+Нормируем: $\mathbf{v} = \frac{1}{\sqrt{9^2 + 8^2}} \begin{pmatrix} -9 \\ 8 \end{pmatrix} = \frac{1}{\sqrt{145}} \begin{pmatrix} -9 \\ 8 \end{pmatrix}$.
+
+Оптимальное направление ошибки:
+\begin{equation}
+\Delta\mathbf{b}_{\max} = \pm \|\Delta\mathbf{b}\|_2 \cdot \mathbf{v} = \pm 0{,}01\sqrt{42485} \cdot \frac{1}{\sqrt{145}} \begin{pmatrix} -9 \\ 8 \end{pmatrix} = \pm 0{,}01\sqrt{\frac{42485}{145}} \begin{pmatrix} -9 \\ 8 \end{pmatrix} = \pm 0{,}01\sqrt{293} \begin{pmatrix} -9 \\ 8 \end{pmatrix}.
+\end{equation}
+
+Численно: $\sqrt{293} \approx 17{,}117$, поэтому
+\begin{equation}
+\Delta\mathbf{b}_{\max} \approx \pm \begin{pmatrix} -1{,}541 \\ 1{,}369 \end{pmatrix}.
+\end{equation}
+
+\textbf{Проверка.} Поскольку $\mathbf{v}$ --- собственный вектор $\mathbf{A}^{-1}$ с собственным значением $1$:
+\begin{equation}
+\mathbf{A}^{-1}\Delta\mathbf{b}_{\max} = \pm 0{,}01\sqrt{293} \cdot \mathbf{A}^{-1}\begin{pmatrix} -9 \\ 8 \end{pmatrix} = \pm 0{,}01\sqrt{293} \cdot \begin{pmatrix} -9 \\ 8 \end{pmatrix}.
+\end{equation}
+\begin{equation}
+\|\Delta\mathbf{x}\|_2 = 0{,}01\sqrt{293} \cdot \sqrt{81 + 64} = 0{,}01\sqrt{293} \cdot \sqrt{145} = 0{,}01\sqrt{42485}.
+\end{equation}
+\begin{equation}
+\frac{\|\Delta\mathbf{x}\|_2}{\|\mathbf{x}\|_2} = \frac{0{,}01\sqrt{42485}}{\sqrt{2}} = 0{,}01\sqrt{21242{,}5} \approx 1{,}4575. \quad \checkmark
+\end{equation}
+
+\subsection*{6. Минимальная погрешность}
+
+\textbf{Тривиальный случай:} при $\Delta\mathbf{b} = \mathbf{0}$ погрешность равна нулю.
+
+\textbf{Нетривиальный случай:} минимум $\|\mathbf{A}^{-1}\Delta\mathbf{b}\|_2/\|\Delta\mathbf{b}\|_2$ равен $1/\|\mathbf{A}\|_2 = 1/146$ и достигается на собственном векторе $\mathbf{A}$, соответствующем $\lambda_{\max} = 146$.
+
+Найдём этот собственный вектор:
+\begin{equation}
+(\mathbf{A} - 146\mathbf{I})\mathbf{v} = \begin{pmatrix} -81 & 72 \\ 72 & -64 \end{pmatrix} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} = \mathbf{0} \implies -81v_1 + 72v_2 = 0 \implies \frac{v_1}{v_2} = \frac{72}{81} = \frac{8}{9}.
+\end{equation}
+
+Нормируем: $\mathbf{v} = \frac{1}{\sqrt{145}} \begin{pmatrix} 8 \\ 9 \end{pmatrix}$.
+
+Оптимальное направление для минимума:
+\begin{equation}
+\Delta\mathbf{b}_{\min} = \pm 0{,}01\sqrt{42485} \cdot \frac{1}{\sqrt{145}} \begin{pmatrix} 8 \\ 9 \end{pmatrix} = \pm 0{,}01\sqrt{293} \begin{pmatrix} 8 \\ 9 \end{pmatrix} \approx \pm \begin{pmatrix} 1{,}369 \\ 1{,}541 \end{pmatrix}.
+\end{equation}
+
+\textbf{Проверка.} Поскольку $\mathbf{v}$ --- собственный вектор $\mathbf{A}^{-1}$ с собственным значением $1/146$:
+\begin{equation}
+\mathbf{A}^{-1}\Delta\mathbf{b}_{\min} = \pm 0{,}01\sqrt{293} \cdot \frac{1}{146} \begin{pmatrix} 8 \\ 9 \end{pmatrix}.
+\end{equation}
+\begin{equation}
+\|\Delta\mathbf{x}\|_2 = \frac{0{,}01\sqrt{293} \cdot \sqrt{145}}{146} = \frac{0{,}01\sqrt{42485}}{146}.
+\end{equation}
+\begin{equation}
+\frac{\|\Delta\mathbf{x}\|_2}{\|\mathbf{x}\|_2} = \frac{0{,}01\sqrt{42485}}{146\sqrt{2}} = \frac{0{,}01\sqrt{21242{,}5}}{146} \approx \frac{1{,}4575}{146} \approx 0{,}00998.
+\end{equation}
+
+\subsection*{Итог}
+
+\begin{itemize}
+    \item Решение системы: $\mathbf{x} = (1, 1)^T$.
+    \item Собственные значения $\mathbf{A}$: $\lambda_1 = 1$, $\lambda_2 = 146$.
+    \item Число обусловленности: $\operatorname{cond}(\mathbf{A}) = 146$.
+    \item Естественное число обусловленности: $\nu(\mathbf{A}, \mathbf{b}) = \sqrt{21242{,}5} \approx 145{,}75$.
+    \item Максимальная относительная погрешность: $\approx 1{,}4575$ ($\approx 145{,}8\%$), достигается на $\Delta\mathbf{b} = \pm 0{,}01\sqrt{293} \cdot (-9, 8)^T$.
+    \item Минимальная ненулевая погрешность: $\approx 0{,}00998$ ($\approx 1{,}0\%$), достигается на $\Delta\mathbf{b} = \pm 0{,}01\sqrt{293} \cdot (8, 9)^T$.
+\end{itemize}
+
+\textbf{Физический смысл:} матрица $\mathbf{A}$ плохо обусловлена ($\operatorname{cond} = 146$). Это означает, что в ``худшем'' направлении ошибка правой части усиливается в 146 раз, а в ``лучшем'' --- практически не усиливается (коэффициент $\approx 1$). Вектор $\mathbf{b} = (137, 154)^T$ почти совпадает с ``худшим'' направлением (собственным вектором для $\lambda = 146$), поэтому реальная максимальная погрешность $\approx 145{,}8\%$ близка к теоретическому максимуму $146\%$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section*{Задача II.9.14}
+
+\textbf{Условие:} Система уравнений $\mathbf{A}\mathbf{x} = \mathbf{f}$, где
+$$\mathbf{A} = \begin{pmatrix} 3 & -1 & 1 \\ 2 & 6 & -2 \\ -1 & 1 & 9 \end{pmatrix}, \quad \mathbf{f} = (4, -4, 2)^T,$$
+решается с помощью метода простых итераций, начальное приближение нулевое. При каких значениях итерационного параметра метод будет сходиться:
+
+а) при вычислениях с бесконечным числом бит в мантиссе?
+
+б) при длине мантиссы 52 бита?
+
+в) при каком значении итерационного параметра сходимость будет самая быстрая?
+
+г) Найти значение оптимального параметра для первого шага решения системы методом наискорейшего спуска.
+
+\vspace{0.5cm}
+\textbf{Решение:}
+
+\subsection*{Предварительный анализ: собственные значения матрицы $\mathbf{A}$}
+
+Метод простых итераций с параметром $\tau$ имеет вид:
+\begin{equation}
+\mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \tau(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{f}) = (\mathbf{I} - \tau\mathbf{A})\mathbf{x}^{(k)} + \tau\mathbf{f}.
+\end{equation}
+
+Итерационная матрица: $\mathbf{B}(\tau) = \mathbf{I} - \tau\mathbf{A}$.
+
+Метод сходится тогда и только тогда, когда спектральный радиус $\rho(\mathbf{B}(\tau)) < 1$.
+
+Найдём собственные значения матрицы $\mathbf{A}$ из характеристического уравнения $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$:
+\begin{equation}
+\det\begin{pmatrix} 3-\lambda & -1 & 1 \\ 2 & 6-\lambda & -2 \\ -1 & 1 & 9-\lambda \end{pmatrix} = 0.
+\end{equation}
+
+Раскрывая определитель:
+\begin{align}
+&(3-\lambda)[(6-\lambda)(9-\lambda) + 2] + [2(9-\lambda) - 2] + [2 + (6-\lambda)] \nonumber \\
+&= (3-\lambda)(\lambda^2 - 15\lambda + 56) + (16 - 2\lambda) + (8 - \lambda) \nonumber \\
+&= -\lambda^3 + 18\lambda^2 - 104\lambda + 192 = 0.
+\end{align}
+
+Проверяем $\lambda = 4$: $-64 + 288 - 416 + 192 = 0$ 
+
+Делим на $(\lambda - 4)$: $\lambda^3 - 18\lambda^2 + 104\lambda - 192 = (\lambda - 4)(\lambda^2 - 14\lambda + 48) = 0$.
+
+Корни квадратного уравнения: $\lambda = \frac{14 \pm \sqrt{196 - 192}}{2} = \frac{14 \pm 2}{2}$, т.е. $\lambda = 8$ и $\lambda = 6$.
+
+\textbf{Собственные значения матрицы $\mathbf{A}$:} $\lambda_1 = 4$, $\lambda_2 = 6$, $\lambda_3 = 8$.
+
+Собственные значения итерационной матрицы $\mathbf{B}(\tau) = \mathbf{I} - \tau\mathbf{A}$:
+\begin{equation}
+\mu_1 = 1 - 4\tau, \quad \mu_2 = 1 - 6\tau, \quad \mu_3 = 1 - 8\tau.
+\end{equation}
+
+\subsection*{а) Сходимость при бесконечной точности}
+
+Метод сходится при $\rho(\mathbf{B}(\tau)) = \max(|\mu_1|, |\mu_2|, |\mu_3|) < 1$:
+\begin{align}
+|1 - 4\tau| &< 1 \implies 0 < \tau < \frac{1}{2}, \\
+|1 - 6\tau| &< 1 \implies 0 < \tau < \frac{1}{3}, \\
+|1 - 8\tau| &< 1 \implies 0 < \tau < \frac{1}{4}.
+\end{align}
+
+Пересечение условий:
+\begin{equation}
+\boxed{0 < \tau < \frac{1}{4}.}
+\end{equation}
+
+\subsection*{б) Сходимость при длине мантиссы 52 бита}
+
+При конечной точности вычислений (double precision, $\varepsilon_{\text{маш}} = 2^{-52} \approx 2.22 \cdot 10^{-16}$) метод сходится к окрестности точного решения, если $\rho(\mathbf{B}(\tau)) < 1$. Однако при $\tau$, близком к границам интервала $(0, 1/4)$, спектральный радиус близок к 1, и сходимость становится чрезвычайно медленной.
+
+Практически метод сходится за разумное число итераций, если $\rho(\mathbf{B}(\tau)) < 1 - c\varepsilon_{\text{маш}}$ для некоторой константы $c$. Это исключает малые окрестности точек $\tau = 0$ и $\tau = 1/4$.
+
+Формально условие сходимости остаётся тем же:
+\begin{equation}
+\boxed{0 < \tau < \frac{1}{4},}
+\end{equation}
+но практически следует выбирать $\tau$ подальше от границ, например $\tau \in (10^{-15}, 1/4 - 10^{-15})$.
+
+\subsection*{в) Оптимальный параметр для максимальной скорости сходимости}
+
+Нужно минимизировать $\rho(\mathbf{B}(\tau)) = \max(|1-4\tau|, |1-6\tau|, |1-8\tau|)$.
+
+При $\tau \in (0, 1/4)$:
+\begin{itemize}
+\item $1 - 4\tau$ убывает от 1 до 0,
+\item $1 - 6\tau$ убывает от 1 до $-1/2$,
+\item $1 - 8\tau$ убывает от 1 до $-1$.
+\end{itemize}
+
+Максимум по модулю определяется крайними собственными значениями: $\max(|1-4\tau|, |1-8\tau|)$.
+
+Оптимум достигается, когда $|1-4\tau| = |1-8\tau|$:
+\begin{equation}
+1 - 4\tau = -(1 - 8\tau) \implies 2 = 12\tau \implies \tau_{\text{opt}} = \frac{1}{6}.
+\end{equation}
+
+При $\tau = 1/6$:
+\begin{align}
+\mu_1 &= 1 - 4 \cdot \frac{1}{6} = \frac{1}{3}, \\
+\mu_2 &= 1 - 6 \cdot \frac{1}{6} = 0, \\
+\mu_3 &= 1 - 8 \cdot \frac{1}{6} = -\frac{1}{3}.
+\end{align}
+
+\begin{equation}
+\boxed{\tau_{\text{opt}} = \frac{1}{6}, \quad \rho(\mathbf{B}(\tau_{\text{opt}})) = \frac{1}{3}.}
+\end{equation}
+
+\subsection*{г) Оптимальный параметр для первого шага метода наискорейшего спуска}
+
+При $\mathbf{x}^{(0)} = \mathbf{0}$: невязка $\mathbf{r}^{(0)} = \mathbf{f} - \mathbf{A}\mathbf{x}^{(0)} = \mathbf{f} = (4, -4, 2)^T$.
+
+Метод наискорейшего спуска: $\mathbf{x}^{(1)} = \mathbf{x}^{(0)} + \tau_0 \mathbf{r}^{(0)} = \tau_0 \mathbf{f}$.
+
+Оптимальный $\tau_0$ минимизирует $\|\mathbf{r}^{(1)}\|^2 = \|\mathbf{f} - \mathbf{A}\mathbf{x}^{(1)}\|^2 = \|\mathbf{f} - \tau_0 \mathbf{A}\mathbf{f}\|^2$.
+
+Условие минимума: $\frac{d}{d\tau_0}\|\mathbf{f} - \tau_0 \mathbf{A}\mathbf{f}\|^2 = -2(\mathbf{f} - \tau_0 \mathbf{A}\mathbf{f}, \mathbf{A}\mathbf{f}) = 0$.
+
+Отсюда:
+\begin{equation}
+\tau_0 = \frac{(\mathbf{f}, \mathbf{A}\mathbf{f})}{(\mathbf{A}\mathbf{f}, \mathbf{A}\mathbf{f})} = \frac{(\mathbf{f}, \mathbf{A}\mathbf{f})}{\|\mathbf{A}\mathbf{f}\|^2}.
+\end{equation}
+
+Вычислим $\mathbf{A}\mathbf{f}$:
+\begin{equation}
+\mathbf{A}\mathbf{f} = \begin{pmatrix} 3 & -1 & 1 \\ 2 & 6 & -2 \\ -1 & 1 & 9 \end{pmatrix} \begin{pmatrix} 4 \\ -4 \\ 2 \end{pmatrix} = \begin{pmatrix} 12 + 4 + 2 \\ 8 - 24 - 4 \\ -4 - 4 + 18 \end{pmatrix} = \begin{pmatrix} 18 \\ -20 \\ 10 \end{pmatrix}.
+\end{equation}
+
+Скалярное произведение $(\mathbf{f}, \mathbf{A}\mathbf{f})$:
+\begin{equation}
+(\mathbf{f}, \mathbf{A}\mathbf{f}) = 4 \cdot 18 + (-4) \cdot (-20) + 2 \cdot 10 = 72 + 80 + 20 = 172.
+\end{equation}
+
+Квадрат нормы $\|\mathbf{A}\mathbf{f}\|^2$:
+\begin{equation}
+\|\mathbf{A}\mathbf{f}\|^2 = 18^2 + (-20)^2 + 10^2 = 324 + 400 + 100 = 824.
+\end{equation}
+
+Оптимальный параметр:
+\begin{equation}
+\boxed{\tau_0 = \frac{172}{824} = \frac{43}{206} \approx 0,2087.}
+\end{equation}
+
+\subsection*{Итог}
+
+\begin{itemize}
+\item а) Метод сходится при $0 < \tau < 1/4$.
+\item б) При конечной точности формально условие то же, но практически следует избегать $\tau$ близких к 0 и $1/4$.
+\item в) Оптимальный параметр $\tau_{\text{opt}} = 1/6$, спектральный радиус $\rho = 1/3$.
+\item г) Для первого шага метода наискорейшего спуска $\tau_0 = 43/206 \approx 0,2087$.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section*{Задача III.4.3}
+
+\textbf{Условие:} Предложить алгоритм проведения на плоскости окружности через четыре и более точек методом наименьших квадратов.
+
+\vspace{0.5cm}
+\textbf{Решение:}
+
+\subsection*{1. Постановка задачи}
+
+Пусть на плоскости заданы $N$ точек с координатами $(x_i, y_i)$, $i = 1, 2, \ldots, N$, причём $N \geqslant 4$. Требуется найти окружность, которая наилучшим образом (в смысле метода наименьших квадратов) аппроксимирует эти точки.
+
+Уравнение окружности с центром в точке $(a, b)$ и радиусом $R$ имеет вид:
+\begin{equation}
+(x - a)^2 + (y - b)^2 = R^2.
+\end{equation}
+
+Раскроем скобки:
+\begin{equation}
+x^2 - 2ax + a^2 + y^2 - 2by + b^2 = R^2.
+\end{equation}
+
+Перегруппируем слагаемые, перенеся всё, что зависит от координат точки, в правую часть:
+\begin{equation}
+2ax + 2by + (R^2 - a^2 - b^2) = x^2 + y^2.
+\end{equation}
+
+Введём обозначение $c = R^2 - a^2 - b^2$. Тогда уравнение окружности принимает вид:
+\begin{equation}
+2ax + 2by + c = x^2 + y^2.
+\label{eq:43_lin}
+\end{equation}
+
+\textbf{Ключевое наблюдение:} уравнение~\eqref{eq:43_lin} линейно относительно неизвестных параметров $a$, $b$ и $c$. Это позволяет свести задачу к решению переопределённой системы линейных алгебраических уравнений (СЛАУ).
+
+\subsection*{2. Составление переопределённой СЛАУ}
+
+Подставим координаты каждой из $N$ заданных точек в уравнение~\eqref{eq:43_lin}. Получим систему:
+\begin{equation}
+\begin{cases}
+2a x_1 + 2b y_1 + c = x_1^2 + y_1^2, \\
+2a x_2 + 2b y_2 + c = x_2^2 + y_2^2, \\
+\quad \vdots \\
+2a x_N + 2b y_N + c = x_N^2 + y_N^2.
+\end{cases}
+\end{equation}
+
+В матричной форме эта система записывается как:
+\begin{equation}
+\mathbf{G} \boldsymbol{\theta} = \mathbf{f},
+\label{eq:43_slau}
+\end{equation}
+где
+\begin{equation}
+\mathbf{G} =
+\begin{pmatrix}
+2x_1 & 2y_1 & 1 \\
+2x_2 & 2y_2 & 1 \\
+\vdots & \vdots & \vdots \\
+2x_N & 2y_N & 1
+\end{pmatrix}, \quad
+\boldsymbol{\theta} =
+\begin{pmatrix}
+a \\ b \\ c
+\end{pmatrix}, \quad
+\mathbf{f} =
+\begin{pmatrix}
+x_1^2 + y_1^2 \\
+x_2^2 + y_2^2 \\
+\vdots \\
+x_N^2 + y_N^2
+\end{pmatrix}.
+\end{equation}
+
+Поскольку $N \geqslant 4 > 3$, система~\eqref{eq:43_slau} является переопределённой и, вообще говоря, не имеет точного решения.
+
+\subsection*{3. Метод наименьших квадратов}
+
+Вместо точного решения будем искать вектор $\boldsymbol{\theta}$, минимизирующий квадрат евклидовой нормы невязки:
+\begin{equation}
+\Phi(\boldsymbol{\theta}) = \|\mathbf{G}\boldsymbol{\theta} - \mathbf{f}\|_2^2 = \sum_{i=1}^{N} \bigl(2a x_i + 2b y_i + c - (x_i^2 + y_i^2)\bigr)^2 \to \min.
+\end{equation}
+
+Необходимое условие минимума --- обращение в нуль градиента $\Phi$ по всем компонентам $\boldsymbol{\theta}$:
+\begin{equation}
+\frac{\partial \Phi}{\partial \boldsymbol{\theta}} = 2\mathbf{G}^T(\mathbf{G}\boldsymbol{\theta} - \mathbf{f}) = \mathbf{0}.
+\end{equation}
+
+Отсюда получаем \textbf{нормальную систему} уравнений:
+\begin{equation}
+\mathbf{G}^T \mathbf{G} \boldsymbol{\theta} = \mathbf{G}^T \mathbf{f}.
+\label{eq:43_normal}
+\end{equation}
+
+Матрица $\mathbf{G}^T \mathbf{G}$ имеет размер $3 \times 3$. Если точки не лежат на одной прямой, эта матрица невырождена, и решение единственно:
+\begin{equation}
+\boldsymbol{\theta} = (\mathbf{G}^T \mathbf{G})^{-1} \mathbf{G}^T \mathbf{f}.
+\label{eq:43_sol}
+\end{equation}
+
+\subsection*{4. Восстановление радиуса}
+
+После того как найдены параметры $a$, $b$, $c$, радиус окружности восстанавливается из соотношения $c = R^2 - a^2 - b^2$:
+\begin{equation}
+R = \sqrt{a^2 + b^2 + c}.
+\end{equation}
+
+\subsection*{5. Итоговый алгоритм}
+
+\begin{enumerate}
+\item \textbf{Входные данные:} координаты $N$ точек $(x_i, y_i)$, $i = 1, \ldots, N$, $N \geqslant 4$.
+
+\item \textbf{Шаг 1.} Сформировать матрицу $\mathbf{G}$ размера $N \times 3$ и вектор $\mathbf{f}$ длины $N$:
+\begin{equation}
+G_{i1} = 2x_i, \quad G_{i2} = 2y_i, \quad G_{i3} = 1, \quad f_i = x_i^2 + y_i^2.
+\end{equation}
+
+\item \textbf{Шаг 2.} Вычислить матрицу $\mathbf{A} = \mathbf{G}^T \mathbf{G}$ размера $3 \times 3$ и вектор $\mathbf{b} = \mathbf{G}^T \mathbf{f}$ длины $3$.
+
+\item \textbf{Шаг 3.} Решить нормальную систему $\mathbf{A} \boldsymbol{\theta} = \mathbf{b}$ относительно $\boldsymbol{\theta} = (a, b, c)^T$.
+
+\item \textbf{Шаг 4.} Вычислить радиус: $R = \sqrt{a^2 + b^2 + c}$.
+
+\item \textbf{Выходные данные:} центр окружности $(a, b)$ и радиус $R$.
+\end{enumerate}
+
+\subsection*{6. Замечание о численной устойчивости}
+
+На практике для повышения численной устойчивости алгоритма рекомендуется перед построением матрицы $\mathbf{G}$ выполнить центрирование данных: вычесть из всех координат $x_i$ и $y_i$ их средние значения $\bar{x}$ и $\bar{y}$. После нахождения параметров в центрированной системе координат центр окружности пересчитывается обратно: $a_{\text{исх}} = a + \bar{x}$, $b_{\text{исх}} = b + \bar{y}$.
+
+\newpage
+
+
+
+\section*{Задача III.4.4}
+
+\textbf{Условие:} Напряжённость магнитного поля $H$ и магнитная индукция $B$ связаны соотношением $B = H/(a + bH)$. По результатам экспериментальных измерений определить коэффициенты $a$ и $b$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+$H$ & 8 & 10 & 15 & 20 & 30 & 40 & 60 & 80 \\
+\hline
+$B$ & 13,0 & 14,0 & 15,4 & 16,3 & 17,2 & 17,8 & 18,5 & 18,8 \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Решение:}
+
+\subsection*{1. Теоретическое обоснование метода итерированного веса}
+
+Исходная задача состоит в минимизации нелинейного функционала невязки:
+\begin{equation}
+\Phi(a, b) = \sum_{i=1}^{N} \left(B_i - \frac{H_i}{a + bH_i}\right)^2 \to \min.
+\label{eq:nonlinear_func}
+\end{equation}
+
+Прямая минимизация~\eqref{eq:nonlinear_func} приводит к системе нелинейных уравнений. Чтобы свести задачу к линейной, выполним алгебраическое преобразование \textit{внутри} квадрата невязки. Приведём выражение в скобках к общему знаменателю:
+\begin{equation}
+B_i - \frac{H_i}{a + bH_i} = \frac{aB_i + bB_iH_i - H_i}{a + bH_i}.
+\end{equation}
+
+Подставим это обратно в функционал~\eqref{eq:nonlinear_func}:
+\begin{equation}
+\Phi(a, b) = \sum_{i=1}^{N} \frac{(aB_i + bB_iH_i - H_i)^2}{(a + bH_i)^2} = \sum_{i=1}^{N} w_i(a, b) \cdot (aB_i + bB_iH_i - H_i)^2 \to \min,
+\label{eq:weighted_func}
+\end{equation}
+где введены \textbf{веса}:
+\begin{equation}
+w_i(a, b) = \frac{1}{(a + bH_i)^2}.
+\end{equation}
+
+Формула~\eqref{eq:weighted_func} представляет собой задачу \textbf{взвешенного метода наименьших квадратов (ВМНК)} для линейного уравнения $aB_i + bB_iH_i = H_i$. Однако веса $w_i$ зависят от искомых параметров $a$ и $b$, поэтому мы не можем решить эту систему за один шаг. Для этого применяется \textbf{метод итерированного веса} (Iteratively Reweighted Least Squares, IRLS).
+
+\subsection*{2. Алгоритм метода итерированного веса}
+
+\begin{enumerate}
+    \item \textbf{Нулевая итерация (начальное приближение):} Решаем задачу \textit{невзвешенного} МНК (полагая $w_i^{(0)} = 1$), чтобы получить начальные оценки $a_0$ и $b_0$.
+    \item \textbf{$k$-я итерация:} 
+    \begin{enumerate}
+        \item Вычисляем веса на основе предыдущих оценок: $w_i^{(k)} = \frac{1}{(a_{k-1} + b_{k-1}H_i)^2}$.
+        \item Решаем взвешенную нормальную систему:
+        \begin{equation}
+        \begin{cases}
+        a \sum w_i^{(k)} B_i^2 + b \sum w_i^{(k)} B_i^2 H_i = \sum w_i^{(k)} B_i H_i, \\
+        a \sum w_i^{(k)} B_i^2 H_i + b \sum w_i^{(k)} B_i^2 H_i^2 = \sum w_i^{(k)} B_i H_i^2.
+        \end{cases}
+        \end{equation}
+        \item Получаем новые оценки $a_k$ и $b_k$.
+    \end{enumerate}
+    \item \textbf{Критерий остановки:} Повторяем шаг 2 до тех пор, пока изменения параметров $|a_k - a_{k-1}|$ и $|b_k - b_{k-1}|$ не станут меньше заданной точности (например, $10^{-4}$).
+\end{enumerate}
+
+\subsection*{3. Численная реализация}
+
+\textbf{Шаг 0. Невзвешенное начальное приближение.}
+Решая систему с $w_i = 1$ (как в классическом линейном МНК), получаем:
+\begin{equation}
+a_0 \approx 0{,}218, \quad b_0 \approx 0{,}0506.
+\end{equation}
+
+\textbf{Шаг 1. Первая итерация с весами.}
+Вычислим веса $w_i^{(1)} = \frac{1}{(0{,}218 + 0{,}0506 \cdot H_i)^2}$ для каждой точки:
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$H_i$ & $a_0 + b_0 H_i$ & $w_i^{(1)}$ & $w_i^{(1)} B_i^2$ \\
+\hline
+8 & 0,623 & 2,57 & 434,3 \\
+10 & 0,724 & 1,91 & 374,4 \\
+15 & 0,977 & 1,05 & 248,9 \\
+20 & 1,230 & 0,66 & 174,9 \\
+30 & 1,736 & 0,33 & 97,4 \\
+40 & 2,242 & 0,20 & 63,2 \\
+60 & 3,254 & 0,09 & 30,8 \\
+80 & 4,266 & 0,05 & 17,7 \\
+\hline
+\end{tabular}
+\end{center}
+
+Подставляя эти веса в нормальную систему, вычисляем суммы:
+\begin{align*}
+\sum w_i B_i^2 &\approx 1441,6, & \sum w_i B_i^2 H_i &\approx 23177, \\
+\sum w_i B_i^2 H_i^2 &\approx 606100, & \sum w_i B_i H_i &\approx 1477, \\
+\sum w_i B_i H_i^2 &\approx 35456. & &
+\end{align*}
+
+Решаем систему:
+\begin{equation}
+\begin{pmatrix}
+1441{,}6 & 23177 \\
+23177 & 606100
+\end{pmatrix}
+\begin{pmatrix}
+a_1 \\ b_1
+\end{pmatrix}
+=
+\begin{pmatrix}
+1477 \\ 35456
+\end{pmatrix}.
+\end{equation}
+
+Определитель системы $\Delta \approx 3{,}36 \cdot 10^8$. Находим:
+\begin{equation}
+a_1 = \frac{1477 \cdot 606100 - 23177 \cdot 35456}{\Delta} \approx 0{,}218, \quad
+b_1 = \frac{1441{,}6 \cdot 35456 - 1477 \cdot 23177}{\Delta} \approx 0{,}0501.
+\end{equation}
+
+\textbf{Шаг 2 и далее.} 
+Повторение процедуры с новыми весами $w_i^{(2)} = \frac{1}{(0{,}218 + 0{,}0501 \cdot H_i)^2}$ показывает, что значения $a$ и $b$ практически перестают меняться (изменения меньше $10^{-4}$). Метод сошёлся.
+
+\subsection*{4. Итоговые результаты и проверка}
+
+Оптимальные значения коэффициентов:
+\begin{equation}
+\boxed{a \approx 0{,}218, \quad b \approx 0{,}0501.}
+\end{equation}
+
+Уравнение кривой намагничивания:
+\begin{equation}
+B = \frac{H}{0{,}218 + 0{,}0501H}.
+\end{equation}
+
+Проверим качество аппроксимации, вычислив невязки $\Delta B_i = B_{i,\text{изм}} - B_{i,\text{расч}}$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$H$ & $B_{\text{изм}}$ & $B_{\text{расч}}$ & Невязка $\Delta B$ \\
+\hline
+8 & 13,0 & 12,93 & +0,07 \\
+10 & 14,0 & 13,88 & +0,12 \\
+15 & 15,4 & 15,38 & +0,02 \\
+20 & 16,3 & 16,30 & 0,00 \\
+30 & 17,2 & 17,31 & -0,11 \\
+40 & 17,8 & 17,86 & -0,06 \\
+60 & 18,5 & 18,46 & +0,04 \\
+80 & 18,8 & 18,77 & +0,03 \\
+\hline
+\end{tabular}
+\end{center}
+
+Сумма невязок близка к нулю ($\sum \Delta B_i \approx 0{,}11$), а максимальное отклонение не превышает $0{,}12$ (менее $1\%$ от максимального значения $B$).
+
+\subsection*{5. Физическая интерпретация}
+\begin{itemize}
+    \item Параметр $a \approx 0{,}218$ определяет начальную магнитную проницаемость: $\mu_0 \approx 1/a \approx 4{,}6$.
+    \item Параметр $b \approx 0{,}0501$ определяет уровень магнитного насыщения: $B_{\text{нас}} = 1/b \approx 19{,}96$ Тл, что полностью согласуется с поведением ферромагнетиков при больших $H$.
+\end{itemize}
+
+
+
+\section*{Задача III.4.8}
+
+\textbf{Условие:} Пусть замеры функции $y = f(x)$ осуществлены в точках $x_k = \cos\frac{\pi(1+2k)}{2(n+1)}$, $k = 0, 1, \ldots, n$, являющихся нулями многочлена Чебышёва $T_{n+1}(x)$, и собраны в таблицу. Среди многочленов степени не выше заданного $k$, $0 \le k \le n$, указать тот многочлен $P_k(x)$, который наилучшим (в смысле метода наименьших квадратов) образом приближает заданную функцию.
+
+Провести вычисления в случае $n = 3$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$x$ & $x_0$ & $x_1$ & $x_2$ & $x_3$ \\
+\hline
+$y$ & 2 & 1 & 3 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Решение:}
+
+\subsection*{1. Теоретическая часть}
+
+Ищем приближающий многочлен в виде разложения по многочленам Чебышёва:
+\begin{equation}
+P_k(x) = \sum_{j=0}^{k} C_j T_j(x), \quad 0 \le k \le n.
+\label{eq:48_pk}
+\end{equation}
+
+Функционал метода наименьших квадратов имеет вид:
+\begin{equation}
+\Phi(C_0, C_1, \ldots, C_k) = \sum_{m=0}^{n} \left(y_m - \sum_{j=0}^{k} C_j T_j(x_m)\right)^2 \to \min.
+\end{equation}
+
+Ключевое свойство, на которое указывает условие задачи: многочлены Чебышёва $T_j(x)$ образуют \textbf{ортогональную систему} на множестве нулей $T_{n+1}(x)$ с единичными весами. А именно, для $x_m = \cos\frac{\pi(1+2m)}{2(n+1)}$ выполняется:
+\begin{equation}
+\sum_{m=0}^{n} T_i(x_m) T_j(x_m) = 
+\begin{cases} 
+0, & i \neq j, \\
+n+1, & i = j = 0, \\
+\frac{n+1}{2}, & i = j \neq 0.
+\end{cases}
+\label{eq:48_orth}
+\end{equation}
+
+Благодаря ортогональности~\eqref{eq:48_orth} нормальная система МНК \textbf{диагонализируется}, и каждый коэффициент $C_j$ находится независимо из условия $\frac{\partial \Phi}{\partial C_j} = 0$:
+\begin{equation}
+C_j = \frac{\displaystyle\sum_{m=0}^{n} y_m T_j(x_m)}{\displaystyle\sum_{m=0}^{n} T_j^2(x_m)}.
+\label{eq:48_cj}
+\end{equation}
+
+Подставляя значения норм из~\eqref{eq:48_orth}, получаем явные формулы:
+\begin{equation}
+C_0 = \frac{1}{n+1} \sum_{m=0}^{n} y_m, \qquad C_j = \frac{2}{n+1} \sum_{m=0}^{n} y_m T_j(x_m), \quad j = 1, 2, \ldots, k.
+\label{eq:48_cj_expl}
+\end{equation}
+
+\subsection*{2. Вычисления для $n = 3$}
+
+Узлы интерполяции --- нули многочлена $T_4(x)$:
+\begin{equation}
+x_m = \cos\frac{\pi(1+2m)}{8}, \quad m = 0, 1, 2, 3.
+\end{equation}
+
+Выпишем их явно:
+\begin{align}
+x_0 &= \cos\frac{\pi}{8} = \frac{\sqrt{2+\sqrt{2}}}{2} \approx 0{,}92388, \\
+x_1 &= \cos\frac{3\pi}{8} = \frac{\sqrt{2-\sqrt{2}}}{2} \approx 0{,}38268, \\
+x_2 &= \cos\frac{5\pi}{8} = -\frac{\sqrt{2-\sqrt{2}}}{2} \approx -0{,}38268, \\
+x_3 &= \cos\frac{7\pi}{8} = -\frac{\sqrt{2+\sqrt{2}}}{2} \approx -0{,}92388.
+\end{align}
+
+Значения многочленов Чебышёва $T_j(x_m) = \cos\frac{j\pi(1+2m)}{8}$ в узлах:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+ & $m=0$ & $m=1$ & $m=2$ & $m=3$ \\
+\hline
+$T_0(x_m)$ & 1 & 1 & 1 & 1 \\
+\hline
+$T_1(x_m)$ & $\cos\frac{\pi}{8}$ & $\cos\frac{3\pi}{8}$ & $-\cos\frac{3\pi}{8}$ & $-\cos\frac{\pi}{8}$ \\
+\hline
+$T_2(x_m)$ & $\cos\frac{\pi}{4} = \frac{\sqrt{2}}{2}$ & $\cos\frac{3\pi}{4} = -\frac{\sqrt{2}}{2}$ & $\cos\frac{5\pi}{4} = -\frac{\sqrt{2}}{2}$ & $\cos\frac{7\pi}{4} = \frac{\sqrt{2}}{2}$ \\
+\hline
+$T_3(x_m)$ & $\cos\frac{3\pi}{8}$ & $-\cos\frac{\pi}{8}$ & $\cos\frac{\pi}{8}$ & $-\cos\frac{3\pi}{8}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Коэффициент $C_0$:}
+\begin{equation}
+C_0 = \frac{1}{4}(y_0 + y_1 + y_2 + y_3) = \frac{1}{4}(2 + 1 + 3 + 0) = \frac{3}{2}.
+\end{equation}
+
+\textbf{Коэффициент $C_1$:}
+\begin{align}
+C_1 &= \frac{2}{4} \sum_{m=0}^{3} y_m T_1(x_m) = \frac{1}{2}\left(2\cos\frac{\pi}{8} + 1\cdot\cos\frac{3\pi}{8} + 3\cdot\left(-\cos\frac{3\pi}{8}\right) + 0\cdot\left(-\cos\frac{\pi}{8}\right)\right) \nonumber \\
+&= \frac{1}{2}\left(2\cos\frac{\pi}{8} - 2\cos\frac{3\pi}{8}\right) = \cos\frac{\pi}{8} - \cos\frac{3\pi}{8} = \frac{\sqrt{2+\sqrt{2}} - \sqrt{2-\sqrt{2}}}{2} \approx 0{,}5412.
+\end{align}
+
+\textbf{Коэффициент $C_2$:}
+\begin{align}
+C_2 &= \frac{2}{4} \sum_{m=0}^{3} y_m T_2(x_m) = \frac{1}{2}\left(2\cdot\frac{\sqrt{2}}{2} + 1\cdot\left(-\frac{\sqrt{2}}{2}\right) + 3\cdot\left(-\frac{\sqrt{2}}{2}\right) + 0\cdot\frac{\sqrt{2}}{2}\right) \nonumber \\
+&= \frac{1}{2}\left(\sqrt{2} - \frac{\sqrt{2}}{2} - \frac{3\sqrt{2}}{2}\right) = \frac{1}{2}\left(-\sqrt{2}\right) = -\frac{\sqrt{2}}{2} \approx -0{,}7071.
+\end{align}
+
+\textbf{Коэффициент $C_3$:}
+\begin{align}
+C_3 &= \frac{2}{4} \sum_{m=0}^{3} y_m T_3(x_m) = \frac{1}{2}\left(2\cos\frac{3\pi}{8} + 1\cdot\left(-\cos\frac{\pi}{8}\right) + 3\cdot\cos\frac{\pi}{8} + 0\cdot\left(-\cos\frac{3\pi}{8}\right)\right) \nonumber \\
+&= \frac{1}{2}\left(2\cos\frac{3\pi}{8} + 2\cos\frac{\pi}{8}\right) = \cos\frac{\pi}{8} + \cos\frac{3\pi}{8} = \frac{\sqrt{2+\sqrt{2}} + \sqrt{2-\sqrt{2}}}{2} \approx 1{,}3066.
+\end{align}
+
+\subsection*{3. Искомые многочлены наилучшего приближения}
+
+Подставляя найденные коэффициенты в формулу~\eqref{eq:48_pk}, получаем:
+
+\begin{align}
+P_0(x) &= \frac{3}{2}, \\
+P_1(x) &= \frac{3}{2} + \left(\cos\frac{\pi}{8} - \cos\frac{3\pi}{8}\right) T_1(x) = \frac{3}{2} + \left(\cos\frac{\pi}{8} - \cos\frac{3\pi}{8}\right) x, \\
+P_2(x) &= P_1(x) - \frac{\sqrt{2}}{2}\, T_2(x) = \frac{3}{2} + \left(\cos\frac{\pi}{8} - \cos\frac{3\pi}{8}\right) x - \frac{\sqrt{2}}{2}(2x^2 - 1), \\
+P_3(x) &= P_2(x) + \left(\cos\frac{\pi}{8} + \cos\frac{3\pi}{8}\right) T_3(x) \nonumber \\
+&= \frac{3}{2} + \left(\cos\frac{\pi}{8} - \cos\frac{3\pi}{8}\right) x - \frac{\sqrt{2}}{2}(2x^2 - 1) + \left(\cos\frac{\pi}{8} + \cos\frac{3\pi}{8}\right)(4x^3 - 3x).
+\end{align}
+
+\textbf{Замечание.} Поскольку при $n = 3$ многочлен $P_3(x)$ имеет степень 3 и строится по 4 узлам, он совпадает с интерполяционным многочленом Лагранжа и точно проходит через все заданные точки. Многочлены $P_0$, $P_1$, $P_2$ дают наилучшее среднеквадратичное приближение среди всех многочленов соответствующей степени.
+
+\subsection*{4. Численная проверка}
+
+Для контроля вычислим значения $P_3(x_m)$ и убедимся, что они совпадают с табличными $y_m$. Например, для $m = 0$:
+\begin{align}
+P_3(x_0) &= C_0 + C_1 T_1(x_0) + C_2 T_2(x_0) + C_3 T_3(x_0) \nonumber \\
+&= \frac{3}{2} + \left(\cos\frac{\pi}{8} - \cos\frac{3\pi}{8}\right)\cos\frac{\pi}{8} - \frac{\sqrt{2}}{2}\cdot\frac{\sqrt{2}}{2} + \left(\cos\frac{\pi}{8} + \cos\frac{3\pi}{8}\right)\cos\frac{3\pi}{8} \nonumber \\
+&= \frac{3}{2} + \cos^2\frac{\pi}{8} - \cos\frac{\pi}{8}\cos\frac{3\pi}{8} - \frac{1}{2} + \cos\frac{\pi}{8}\cos\frac{3\pi}{8} + \cos^2\frac{3\pi}{8} \nonumber \\
+&= 1 + \cos^2\frac{\pi}{8} + \cos^2\frac{3\pi}{8} = 1 + \frac{1+\cos\frac{\pi}{4}}{2} + \frac{1+\cos\frac{3\pi}{4}}{2} = 1 + \frac{1}{2} + \frac{1}{2} = 2 = y_0. \quad \checkmark
+\end{align}
+
+Аналогично проверяются остальные узлы.
+
+
+
+
+\end{document}

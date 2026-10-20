@@ -1,0 +1,60 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=1cm}
+\usepackage{multicol}
+
+\begin{document}
+% \begin{multicols}{2}
+
+\subsection*{1. Квадрат 4-импульса или свёртка $p^\mu p_\mu$}
+$$p^\mu p_\mu = m^2 c^2 = \frac{E^2}{c^2} - \mathbf{p}^2 \quad \Rightarrow \quad E^2 = (pc)^2 + (mc^2)^2$$
+
+\subsection*{2. Выражение для калибровочного преобразования потенциалов}
+В 4-мерной форме:
+$$A'_\mu = A_\mu + \partial_\mu f, \quad \partial_\mu = \frac{\partial}{\partial x^\mu}$$
+
+В 3-мерной форме (эквивалентно):
+$$\varphi' = \varphi + \frac{1}{c}\frac{\partial f}{\partial t}, \qquad \vec{A}' = \vec{A} - \nabla f$$
+
+Поля $\mathbf{E}$ и $\mathbf{H}$ при этом не меняются.
+
+\textbf{Условия калибровки (необязательно):}
+\begin{itemize}
+\item \textbf{Калибровка Кулона:} $\text{div}\,\vec{A} = 0 \;\Leftrightarrow\; \nabla\cdot\vec{A} = 0$
+\item \textbf{Калибровка Лоренца:} $\dfrac{1}{c}\dfrac{\partial\varphi}{\partial t} + \text{div}\,\vec{A} = 0 \;\Leftrightarrow\; \partial_\mu A^\mu = 0$
+\end{itemize}
+
+\subsection*{3. Полное действие для заряженной частицы и ЭМ поля}
+\textbf{Ковариантная форма (основной ответ):}
+$$S = S_p + S_{p-f}= -mc\int_{S_a}^{S_b} ds - \frac{e}{c}\int_{S_a}^{S_b} A_\mu dx^\mu$$
+Первый член — свободная частица, второй — взаимодействие с полем.
+
+% \textbf{Ковариантная форма (основной ответ):}
+% $$S = S_{\text{ч}} + S_{\text{вз}} + S_{\text{п}}$$
+% $$S = -mc\int ds - \frac{e}{c}\int A_\mu\, dx^\mu - \frac{1}{16\pi}\int F_{\mu\nu}F^{\mu\nu}\, d^4x$$
+
+% \begin{itemize}
+% \item $S_{\text{ч}} = -mc\int ds$ — свободная частица
+% \item $S_{\text{вз}} = -\frac{e}{c}\int A_\mu\, dx^\mu$ — взаимодействие с полем
+% \item $S_{\text{п}} = -\frac{1}{16\pi}\int F_{\mu\nu}F^{\mu\nu}\, d^4x$ — свободное ЭМ поле
+% \end{itemize}
+
+\textbf{Через лагранжиан (эквивалентно):}
+$$S = \int_{t_a}^{t_b} L\, dt$$
+$$L = -mc^2\sqrt{1-\frac{v^2}{c^2}} - e\varphi + \frac{e}{c}\vec{A}\cdot\vec{v}$$
+
+
+\subsection*{4. Уравнение движения частицы в ЭМ поле в ковариантной форме}
+$$mc\frac{du^\mu}{ds} = \frac{e}{c}F^{\mu\nu}u_\nu = \frac{e}{c}\left(\partial^\mu A^\nu - \partial^\nu A^\mu\right)u_\nu$$
+
+\subsection*{5. Тензор электромагнитного поля $F^{\mu\nu}$ (антисимметричен: $F^{\mu\nu} = -F^{\nu\mu}$; при опускании индексов у компонент Е меняются знаки)}
+$$F^{\mu\nu} = \begin{pmatrix} 0 & -E_x & -E_y & -E_z \\ E_x & 0 & -H_z & H_y \\ E_y & H_z & 0 & -H_x \\ E_z & -H_y & H_x & 0 \end{pmatrix} \qquad F_{\mu\nu} = \begin{pmatrix} 0 & E_x & E_y & E_z \\ -E_x & 0 & -H_z & H_y \\ -E_y & H_z & 0 & -H_x \\ -E_z & -H_y & H_x & 0 \end{pmatrix}$$
+
+\subsection*{6. Поля через потенциалы (СГС)}
+$$\mathbf{E} = -\frac{\partial\varphi}{\partial\mathbf{r}} - \frac{1}{c}\frac{\partial\mathbf{A}}{\partial t}$$
+$$\mathbf{H} = \text{rot}\,\mathbf{A} $$
+
+\end{document}

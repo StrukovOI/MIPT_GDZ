@@ -1,0 +1,165 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{multicol}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{titlesec}
+
+\geometry{top=1cm,bottom=1cm,left=1cm,right=1cm}
+\setlength{\columnsep}{0.8cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+\pagestyle{empty}
+
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+\titlespacing*{\subsection}{0pt}{3pt}{1pt}
+
+\begin{document}
+\begin{multicols}{2}
+
+\section*{Шпаргалка по квантовой физике}
+
+\subsection*{Основные константы}
+\begin{tabular}{lcc}
+\toprule
+Константа & СГС & СИ \\
+\midrule
+$\hbar$ & $1{,}055\cdot10^{-27}$ эрг$\cdot$с & $1{,}055\cdot10^{-34}$ Дж$\cdot$с \\
+$h$ & $6{,}626\cdot10^{-27}$ эрг$\cdot$с & $6{,}626\cdot10^{-34}$ Дж$\cdot$с \\
+$c$ & $3\cdot10^{10}$ см/с & $3\cdot10^{8}$ м/с \\
+$e$ & $4{,}803\cdot10^{-10}$ СГСЭ & $1{,}602\cdot10^{-19}$ Кл \\
+$m_e$ & $9{,}11\cdot10^{-28}$ г & $9{,}11\cdot10^{-31}$ кг \\
+$m_p$ & $1{,}67\cdot10^{-24}$ г & $1{,}67\cdot10^{-27}$ кг \\
+$k_B$ & $1{,}38\cdot10^{-16}$ эрг/К & $1{,}38\cdot10^{-23}$ Дж/К \\
+$\mu_B$ & $9{,}27\cdot10^{-21}$ эрг/Гс & $9{,}27\cdot10^{-24}$ Дж/Тл \\
+$\mu_N$ & $5{,}05\cdot10^{-24}$ эрг/Гс & $5{,}05\cdot10^{-27}$ Дж/Тл \\
+$a_0$ & $0{,}53\cdot10^{-8}$ см & $0{,}53\cdot10^{-10}$ м \\
+$\alpha$ & $1/137$ & $1/137$ \\
+Ry & $13{,}6$ эВ & $13{,}6$ эВ \\
+\bottomrule
+\end{tabular}
+
+\textbf{Полезные комбинации:}
+$\hbar c \approx 1973$ эВ$\cdot$Å $\approx 1{,}97\cdot10^{-5}$ эВ$\cdot$см;
+$m_e c^2 \approx 511$ кэВ;
+$m_p c^2 \approx 938$ МэВ;
+$hc \approx 1240$ эВ$\cdot$нм.
+
+\section{Фотоэффект и эффект Комптона}
+
+\textbf{Фотоэффект.} Уравнение Эйнштейна:
+$h\nu = A_{\text{вых}} + E_{\text{кин}}^{\max}$,
+где $E_{\text{кин}}^{\max} = eU_{\text{задерж}}$.
+Красная граница: $\lambda_{\text{кр}} = hc/A_{\text{вых}}$.
+
+\textbf{Эффект Комптона.} Сдвиг длины волны:
+$$\Delta\lambda = \frac{h}{m_e c}(1-\cos\theta) = \lambda_C(1-\cos\theta),$$
+$\lambda_C = h/(m_e c) = 2{,}43\cdot10^{-10}$ см.
+Энергия рассеянного фотона:
+$$E' = \frac{E}{1 + \frac{E}{m_e c^2}(1-\cos\theta)}.$$
+\textit{Метод:} законы сохранения энергии и импульса.
+
+\section{Волны де Бройля. Неопределённости}
+
+\textbf{Длина волны де Бройля:} $\lambda = h/p$.
+Нерелятивистский случай: $\lambda = h/\sqrt{2mE_{\text{кин}}}$.
+Релятивистский: $\lambda = hc/\sqrt{E_{\text{кин}}^2 + 2E_{\text{кин}}mc^2}$.
+
+\textbf{Соотношение неопределённостей:}
+$\Delta x\cdot\Delta p_x \geqslant \hbar/2$,
+$\Delta E\cdot\Delta t \geqslant \hbar/2$.
+Оценки: $E_{\min} \sim \hbar^2/(2ma^2)$; $r \sim a_0 = \hbar^2/(me^2)$.
+
+\section{Уравнение Шрёдингера. Барьеры}
+
+Стационарное уравнение: $-\frac{\hbar^2}{2m}\psi'' + U\psi = E\psi$.
+
+\textbf{Прямоугольный барьер} ($U_0 > E$):
+$D \approx e^{-2\kappa L}$, $\kappa = \sqrt{2m(U_0-E)}/\hbar$ (при $\kappa L \gg 1$).
+
+\textbf{Яма с бесконечными стенками:}
+$E_n = \pi^2\hbar^2 n^2/(2ma^2)$,
+$\psi_n = \sqrt{2/a}\sin(\pi n x/a)$.
+
+\section{Потенциальные ямы. Квазиклассика}
+
+\textbf{Яма с конечными стенками:}
+$k\tan(ka) = \kappa$ (чётные), $k\cot(ka) = -\kappa$ (нечётные),
+$k = \sqrt{2mE}/\hbar$, $\kappa = \sqrt{2m(U_0-E)}/\hbar$.
+
+\textbf{Правило Бора--Зоммерфельда:}
+$\oint p\,dx = 2\pi\hbar(n+1/2)$.
+
+\section{Колебательные и вращательные уровни}
+
+\textbf{Гармонический осциллятор:}
+$E_n = \hbar\omega(n+1/2)$,
+$A_0 = \sqrt{\hbar/(\mu\omega)}$.
+
+\textbf{Жёсткий ротатор:}
+$E_J = \frac{\hbar^2}{2I}J(J+1)$, $I = \mu d^2$, $\mu = \frac{m_1 m_2}{m_1+m_2}$.
+Расстояние между линиями: $\Delta\tilde{\nu} = \hbar/(2\pi c I)$.
+
+\textbf{Водородоподобный атом:}
+$E_n = -Z^2\text{Ry}/n^2 = -Z^2\cdot13{,}6/n^2$ эВ,
+$a_n = n^2 a_0/Z$.
+Формула Ридберга: $1/\lambda = R_\infty Z^2(1/n_1^2 - 1/n_2^2)$.
+
+\section{Магнитный момент. Спин}
+
+$\vec{\mu}_s = -g_e\mu_B\vec{s}/\hbar$, $g_e \approx 2$, $\mu_z = \pm\mu_B$.
+
+\textbf{Сложение спинов} $s_1 = s_2 = 1/2$:
+Синглет ($S=0$, антисимм., 1 сост.), Триплет ($S=1$, симм., 3 сост.).
+$\langle\mathbf{s}_1\cdot\mathbf{s}_2\rangle = \frac{1}{2}[S(S+1) - s_1(s_1+1) - s_2(s_2+1)]$.
+
+\textbf{Обменное взаимодействие:}
+$V_{\text{обм}} = -2J\langle\mathbf{s}_1\cdot\mathbf{s}_2\rangle$.
+Для гелия: $E_{\text{орто}} = \varepsilon + \mathcal{E}_\text{к} - A$ ($S=1$),
+$E_{\text{пара}} = \varepsilon + \mathcal{E}_\text{к} + A$ ($S=0$).
+
+\textbf{Эффект Эйнштейна--де Гааза:} $\omega = 2Nl/I$.
+
+\section{Сложные атомы. Тонкая структура}
+
+\textbf{Тонкая структура:} $\Delta E_{\text{тонк}} \sim m_e c^2 \alpha^4$.
+Правило интервалов Ланде: $\frac{E(J)-E(J-1)}{E(J-1)-E(J-2)} = \frac{J}{J-1}$.
+
+\textbf{Сверхтонкая структура:}
+Контактное (для $s$): $\Delta E = \frac{8}{3}\frac{g_e g_p \mu_B \mu_N}{a_0^3}$.
+Диполь-дипольное (для $p$): $\Delta E \sim \mu_B^2/(a_0^3 n^3)$.
+$\langle 1/r^3 \rangle = \frac{Z^3}{a_0^3 n^3 l(l+1/2)(l+1)}$.
+
+\textbf{Фактор Ланде:}
+$$g_J = 1 + \frac{J(J+1)+S(S+1)-L(L+1)}{2J(J+1)}.$$
+$\mu = g_J\sqrt{J(J+1)}\mu_B$, $\mu_{\max} = g_J J \mu_B$.
+
+\section{Излучение. Правила отбора}
+
+\textbf{E1 (электрический дипольный):}
+$\Delta l = \pm 1$, смена чётности, $\Delta j = 0,\pm1$ (кроме $0\to0$), $\Delta m_j = 0,\pm1$.
+
+\textbf{M1 (магнитный дипольный):}
+$\Delta l = 0$, чётность не меняется, $\Delta j = 0,\pm1$.
+
+\textbf{E2 (электрический квадрупольный):}
+$\Delta l = 0,\pm2$, чётность не меняется, $\Delta j = 0,\pm1,\pm2$.
+
+\textbf{Термы:} $n^{2S+1}L_J$.
+Правило Хунда: 1) макс. $S$; 2) при одинаковом $S$ -- макс. $L$; 3) для оболочки менее чем наполовину заполненной -- мин. $J$.
+Симметрия для двух эквивалентных электронов: $(-1)^{L+S} = +1$.
+
+\section{Типичные методы}
+
+\textbf{1. Оценка порядка:} использовать $\hbar, m_e, e, a_0$ для размерности.
+\textbf{2. Расщепление уровней:} выписать квантовые числа $\to$ правила отбора $\to$ формула расщепления.
+\textbf{3. Магнитные моменты:} найти $g_J \to \mu_{\max} = g_J J \mu_B$.
+\textbf{4. Туннелирование:} $\kappa = \sqrt{2m(U_0-E)}/\hbar$, $D \sim e^{-2\kappa L}$.
+\textbf{5. Сверхтонкая структура:} $s$-состояния $\to$ контактное $\propto |\psi(0)|^2$; $p$-состояния $\to$ диполь-дипольное $\propto 1/r^3$.
+
+\end{multicols}
+\end{document}

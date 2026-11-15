@@ -43,8 +43,7 @@ colorlinks=true,urlcolor=blue
 \usepackage{ragged2e}
 
 \usepackage{tikz}
-\usetikzlibrary{arrows,decorations.markings,calc}
-\usetikzlibrary{arrows.meta, calc, patterns}
+\usetikzlibrary{arrows.meta, calc, patterns, decorations.markings}
 
 \usepackage{booktabs}
 
@@ -544,7 +543,7 @@ I_{\text{пор}} = -\frac{b}{k}.
 
 
 
-\section*{{\textbf{Решение дополнительных задач}}}
+\section*{{\textbf{Задача про ракету}}}
 
 
 \subsection*{Условие задачи}
@@ -638,6 +637,177 @@ w_L \approx \theta L = 6{,}77 \cdot 10^{-6} \cdot 10^5 \approx 0{,}677 \text{ м
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section*{Задача о заселённости двух уровней}
+
+Рассматривается двухуровневая система, где:
+\begin{enumerate}
+    \item $N_1$ --- заселённость основного уровня,
+    \item $N_2$ --- заселённость возбуждённого уровня,
+    \item $N = N_1 + N_2 = \text{const}$ --- полная заселённость,
+    \item $\beta$ --- коэффициент Эйнштейна,
+    \item $\varphi$ --- плотность потока фотонов,
+    \item $\tau$ --- время жизни возбуждённого состояния (спонтанный распад).
+\end{enumerate}
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[
+    >=Stealth,
+    level/.style={line width=2.5pt},
+    electron/.style={circle, fill=blue!60, inner sep=1.5pt, minimum size=8pt},
+    arrow/.style={->, thick, color=red!70!black},
+    label/.style={font=\small, color=black}
+]
+
+% --- Уровни ---
+\draw[level] (-3, 0)  -- (3, 0)  node[right=8pt] {$N_2$ (возбуждённый)};
+\draw[level] (-3, -4) -- (3, -4) node[right=8pt] {$N_1$ (основной)};
+
+% --- Электроны на верхнем уровне (N2) ---
+\foreach \x in {-2, -1, 0, 1}
+    \node[electron] at (\x, 0) {};
+
+% --- Электроны на нижнем уровне (N1) ---
+\foreach \x in {-2.5, -1.5, -0.5, 0.5, 1.5, 2.5}
+    \node[electron] at (\x, -4) {};
+
+% --- Стрелка поглощения: N1 -> N2 (слева) ---
+\draw[arrow]
+    (-2.2, -3.4) -- (-2.2, -0.6)
+    node[midway, left=4pt, label, align=left]
+        {Поглощение\\ $\beta\varphi N_1$};
+
+% --- Стрелка вынужденного излучения: N2 -> N1 (справа, сплошная) ---
+\draw[arrow]
+    (2.2, -0.6) -- (2.2, -3.4)
+    node[midway, right=4pt, label, align=left]
+        {Вынужд. излуч.\\ $\beta\varphi N_2$};
+
+% --- Стрелка спонтанного излучения: N2 -> N1 (по центру, пунктир) ---
+\draw[arrow, dashed, color=orange!80!red]
+    (0, -0.6) -- (0, -3.4)
+    node[midway, label, align=left] % Убрали невалидный center=4pt
+        {Спонт. излуч\\ $\dfrac{N_2}{\tau}$};
+
+\end{tikzpicture}
+\caption{Двухуровневая система: переходы между уровнями $N_1$ и $N_2$.}
+\end{figure}
+
+\subsection*{Система кинетических уравнений}
+
+
+\begin{equation}
+    \begin{cases}
+        \dfrac{dN_1}{dt} = -\beta\varphi N_1 + \beta\varphi N_2 + \dfrac{N_2}{\tau} \\[8pt]
+        \dfrac{dN_2}{dt} = +\beta\varphi N_1 - \beta\varphi N_2 - \dfrac{N_2}{\tau}
+    \end{cases}
+\end{equation}
+
+Проверка сохранения числа частиц:
+\[
+    \frac{dN_1}{dt} + \frac{dN_2}{dt} = 0 \quad \Longrightarrow \quad N_1 + N_2 = N = \text{const}.
+\]
+
+\subsection*{Сведение к одному уравнению}
+
+Подставляем $N_1 = N - N_2$ во второе уравнение:
+
+\begin{align}
+    \frac{dN_2}{dt} &= \beta\varphi(N - N_2) - \beta\varphi N_2 - \frac{N_2}{\tau} \notag \\
+    &= \beta\varphi N - 2\beta\varphi N_2 - \frac{N_2}{\tau} \notag \\
+    &= \beta\varphi N - \left(2\beta\varphi + \frac{1}{\tau}\right)N_2. \label{eq:ode}
+\end{align}
+
+Это линейное неоднородное ОДУ первого порядка вида
+\[
+    \frac{dN_2}{dt} + \alpha N_2 = \beta\varphi N, \quad \text{где } \alpha = 2\beta\varphi + \frac{1}{\tau}.
+\]
+
+\subsection*{Решение ОДУ}
+
+Общее решение:
+\[
+    N_2(t) = N_2^{\text{(ст)}} + C\,e^{-\alpha t},
+\]
+где стационарное решение $N_2^{\text{(ст)}}$ находится из условия $\dfrac{dN_2}{dt}=0$:
+
+\[
+    N_2^{\text{(ст)}} = \frac{\beta\varphi N}{2\beta\varphi + \dfrac{1}{\tau}}.
+\]
+
+Начальное условие: при $t = 0$ все частицы на основном уровне, т.\,е. $N_2(0) = 0$.
+
+\[
+    0 = \frac{\beta\varphi N}{2\beta\varphi + \frac{1}{\tau}} + C \quad \Longrightarrow \quad C = -\frac{\beta\varphi N}{2\beta\varphi + \frac{1}{\tau}}.
+\]
+
+Окончательно:
+
+\begin{equation}
+    \boxed{N_2(t) = \frac{\beta\varphi N}{2\beta\varphi + \dfrac{1}{\tau}}\left(1 - e^{-\left(2\beta\varphi + \frac{1}{\tau}\right)t}\right)}
+\end{equation}
+
+\subsection*{Нахождение $N_1(t)$}
+
+\[
+    N_1(t) = N - N_2(t) = N\left[1 - \frac{\beta\varphi}{2\beta\varphi + \frac{1}{\tau}}\left(1 - e^{-\left(2\beta\varphi + \frac{1}{\tau}\right)t}\right)\right].
+\]
+
+\subsection*{Отношение заселённостей $N_2/N_1$}
+
+Введём обозначения для краткости:
+\[
+    A = \frac{\beta\varphi}{2\beta\varphi + \frac{1}{\tau}}, \qquad B = 2\beta\varphi + \frac{1}{\tau}.
+\]
+
+Тогда $N_2 = AN\left(1 - e^{-Bt}\right)$, $N_1 = N\left(1 - A + A e^{-Bt}\right)$, и
+
+\begin{equation}
+    \frac{N_2}{N_1} = \frac{A\left(1 - e^{-Bt}\right)}{1 - A + A\,e^{-Bt}}.
+\end{equation}
+
+Раскрывая обозначения:
+
+\begin{equation}
+    \frac{N_2}{N_1} = \frac{\beta\varphi\left(1 - e^{-\left(2\beta\varphi + \frac{1}{\tau}\right)t}\right)}{\left(\beta\varphi + \frac{1}{\tau}\right) + \beta\varphi\, e^{-\left(2\beta\varphi + \frac{1}{\tau}\right)t}}.
+\end{equation}
+
+\subsection*{Предел при $t \to \infty$ }
+
+При $t \to \infty$ экспонента $e^{-Bt} \to 0$:
+
+\[
+    \left.\frac{N_2}{N_1}\right|_{t\to\infty} = \frac{A}{1 - A} = \frac{\dfrac{\beta\varphi}{2\beta\varphi + \frac{1}{\tau}}}{1 - \dfrac{\beta\varphi}{2\beta\varphi + \frac{1}{\tau}}} = \frac{\beta\varphi}{\beta\varphi + \dfrac{1}{\tau}}.
+\]
+
+\subsection*{Предел при $\varphi \to \infty$ }
+
+\[
+    \lim_{\varphi\to\infty}\frac{N_2}{N_1} = \lim_{\varphi\to\infty}\frac{\beta\varphi}{\beta\varphi + \frac{1}{\tau}} = \lim_{\varphi\to\infty}\frac{1}{1 + \dfrac{1}{\beta\varphi\tau}} = 1.
+\]
+
+\subsection*{Физический смысл}
+
+\[
+    \boxed{\lim_{\substack{t\to\infty \\ \varphi\to\infty}} \frac{N_2}{N_1} = 1}
+\]
+
+При бесконечно большом потоке фотонов и достаточно длительном времени воздействия наступает \textbf{насыщение}: заселённости основного и возбуждённого уровней выравниваются ($N_2 = N_1 = N/2$). Дальнейшее увеличение интенсивности излучения не может создать инверсию заселённостей в двухуровневой системе.
 
 
 

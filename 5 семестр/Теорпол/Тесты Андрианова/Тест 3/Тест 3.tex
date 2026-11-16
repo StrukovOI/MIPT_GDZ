@@ -1,0 +1,166 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{tensor}
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\title{\textbf{В рамочку обведено то, что скорее всего нужно написать в тестике}}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Задача 1. Потенциал диполя и квадруполя}
+
+\textbf{Условие:} Записать выражения для потенциала диполя и квадруполя.
+
+\textbf{Решение:}
+
+Разложение потенциала в мультипольный ряд:
+
+\begin{equation}
+\varphi(\vec{r}) = \int d^3r' \frac{g(\vec{r}')}{|\vec{r} - \vec{r}'|}
+\end{equation}
+
+При $r \gg r'$ разлагаем:
+
+\begin{equation}
+\frac{1}{|\vec{r} - \vec{r}'|} = \frac{1}{r} + \frac{\vec{r} \cdot \vec{r}'}{r^3} + \frac{3(\vec{r} \cdot \vec{r}')^2 - r^2 r'^2}{2r^5} + \ldots
+\end{equation}
+
+\textbf{Дипольный член:}
+\begin{equation}
+\boxed{\varphi^{(1)}(\vec{r}) = \frac{\vec{d} \cdot \vec{r}}{r^3}}
+\end{equation}
+где дипольный момент:
+\begin{equation}
+\boxed{\vec{d} = \int d^3\vec{r}' \, \vec{r}' \, g(\vec{r}')}
+\end{equation}
+
+\textbf{Квадрупольный член:}
+\begin{equation}
+\boxed{\varphi^{(2)}(\vec{r}) = \frac{D_{ij} r_i r_j}{2r^5}}
+\end{equation}
+где тензор квадрупольного момента:
+\begin{equation}
+\boxed{D_{ij} = \int d^3\vec{r}' \, g(\vec{r}') \left(3r'_i r'_j - \delta_{ij} r'^2\right)}
+\end{equation}
+
+\section*{Задача 2. Инвариантность дипольного момента}
+
+\textbf{Условие:} Показать, что для электронейтральной системы зарядов дипольный момент не зависит от выбора начала координат.
+
+\textbf{Решение:}
+
+Пусть система зарядов электронейтральна: $\sum_\alpha e_\alpha = 0$.
+
+Дипольный момент относительно начала координат $O$:
+\begin{equation}
+\boxed{\vec{d} = \sum_\alpha e_\alpha \vec{r}_\alpha}
+\end{equation}
+
+При смещении начала координат на $\vec{r}_0$:
+\begin{equation}
+\boxed{\vec{d}' = \sum_\alpha e_\alpha (\vec{r}_\alpha - \vec{r}_0) = \sum_\alpha e_\alpha \vec{r}_\alpha - \vec{r}_0 \sum_\alpha e_\alpha}
+\end{equation}
+
+Так как $\sum_\alpha e_\alpha = 0$:
+\begin{equation}
+\boxed{\vec{d}' = \vec{d}}
+\end{equation}
+
+Дипольный момент инвариантен относительно выбора начала координат для электронейтральной системы.
+
+\section*{Задача 3. Потенциал от плотности заряда}
+
+\textbf{Условие:} Записать выражение для потенциала, создаваемого распределением заряда с плотностью $g(\vec{r})$.
+
+\textbf{Решение:}
+
+Решение уравнения Пуассона $\Delta \varphi = -4\pi g$:
+
+\begin{equation}
+\boxed{\varphi(\vec{r}) = \int d^3\vec{r}' \frac{g(\vec{r}')}{|\vec{r} - \vec{r}'|}}
+\end{equation}
+
+Это частное решение неоднородного уравнения. Общее решение включает также решение однородного уравнения $\Delta \varphi_0 = 0$.
+
+\section*{Задача 4. Калибровка Лоренца и волновое уравнение}
+
+\textbf{Условие:} Записать условие калибровки Лоренца и волновое уравнение для 4-потенциала.
+
+\textbf{Решение:}
+
+\textbf{Калибровка Лоренца} в ковариантной форме:
+\begin{equation}
+\boxed{\partial_\mu A^\mu = 0}
+\end{equation}
+
+В 3-мерной форме:
+\begin{equation}
+\boxed{\frac{1}{c}\frac{\partial \varphi}{\partial t} + \text{div} \vec{A} = 0}
+\end{equation}
+
+\textbf{Волновое уравнение} для 4-потенциала в калибровке Лоренца:
+\begin{equation}
+\boxed{\Box A^\mu = \frac{4\pi}{c} j^\mu}
+\end{equation}
+
+где $\Box = \partial_\mu \partial^\mu = \frac{1}{c^2}\frac{\partial^2}{\partial t^2} - \Delta$ — оператор Даламбера.
+
+В 3-мерной форме:
+\begin{equation}
+\frac{1}{c^2}\frac{\partial^2 \varphi}{\partial t^2} - \Delta \varphi = 4\pi \rho
+\end{equation}
+\begin{equation}
+\frac{1}{c^2}\frac{\partial^2 \vec{A}}{\partial t^2} - \Delta \vec{A} = \frac{4\pi}{c} \vec{j}
+\end{equation}
+
+\section*{Задача 5. II пара уравнений Максвелла и проверка согласованности}
+
+\textbf{Условие:} Записать II пару уравнений Максвелла и проверить их согласованность с уравнением непрерывности.
+
+\textbf{Решение:}
+
+\textbf{II пара уравнений Максвелла} в ковариантной форме:
+\begin{equation}
+\boxed{\frac{\partial F^{\mu\nu}}{\partial x^\nu} = -\frac{4\pi}{c} j^\mu}
+\end{equation}
+
+В 3-мерной форме:
+\begin{equation}
+\boxed{\text{div} \vec{E} = 4\pi \rho}
+\end{equation}
+\begin{equation}
+\boxed{\text{rot} \vec{H} = \frac{1}{c}\frac{\partial \vec{E}}{\partial t} + \frac{4\pi}{c} \vec{j}}
+\end{equation}
+
+\textbf{Проверка согласованности:}
+
+Берём дивергенцию от второго уравнения:
+\begin{equation}
+\nabla \cdot (\nabla \times \vec{H}) = \frac{1}{c}\frac{\partial}{\partial t}(\nabla \cdot \vec{E}) + \frac{4\pi}{c} \nabla \cdot \vec{j}
+\end{equation}
+
+Так как $\nabla \cdot (\nabla \times \vec{H}) = 0$ и $\nabla \cdot \vec{E} = 4\pi \rho$:
+\begin{equation}
+0 = \frac{4\pi}{c}\frac{\partial \rho}{\partial t} + \frac{4\pi}{c} \nabla \cdot \vec{j}
+\end{equation}
+
+Получаем \textbf{уравнение непрерывности}:
+\begin{equation}
+\boxed{\frac{\partial \rho}{\partial t} + \nabla \cdot \vec{j} = 0}
+\end{equation}
+
+В ковариантной форме: $\partial_\mu j^\mu = 0$.
+
+Согласованность доказана: II пара уравнений Максвелла автоматически удовлетворяет закону сохранения заряда.
+
+\end{document}

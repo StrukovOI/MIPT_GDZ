@@ -92,37 +92,26 @@
 
 Это частное решение неоднородного уравнения. Общее решение включает также решение однородного уравнения $\Delta \varphi_0 = 0$.
 
-\section*{Задача 4. Калибровка Лоренца и волновое уравнение}
+\section*{Задача 4. Волновые уравнения в калибровке Лоренца}
 
-\textbf{Условие:} Записать условие калибровки Лоренца и волновое уравнение для 4-потенциала.
+\textbf{Условие калибровки Лоренца:}
+\[
+\frac{1}{c}\frac{\partial \varphi}{\partial t} + \operatorname{div}\vec{A} = 0 \quad \left(\text{или } \boxed{\partial_\mu A^\mu = 0}\right)
+\]
 
-\textbf{Решение:}
+\textbf{Волновые уравнения для потенциалов:}
+\[
+\Box \varphi = 4\pi\rho \quad \Longrightarrow \quad \boxed{\frac{1}{c^2}\frac{\partial^2 \varphi}{\partial t^2} - \Delta \varphi = 4\pi\rho}
+\]
+\[
+\Box \vec{A} = \frac{4\pi}{c}\vec{j} \quad \Longrightarrow \quad \boxed{\frac{1}{c^2}\frac{\partial^2 \vec{A}}{\partial t^2} - \Delta \vec{A} = \frac{4\pi}{c}\vec{j}}
+\]
+где $\Box = \dfrac{1}{c^2}\dfrac{\partial^2}{\partial t^2} - \Delta$ --- оператор Даламбера.
 
-\textbf{Калибровка Лоренца} в ковариантной форме:
-\begin{equation}
-\boxed{\partial_\mu A^\mu = 0}
-\end{equation}
-
-В 3-мерной форме:
-\begin{equation}
-\boxed{\frac{1}{c}\frac{\partial \varphi}{\partial t} + \text{div} \vec{A} = 0}
-\end{equation}
-
-\textbf{Волновое уравнение} для 4-потенциала в калибровке Лоренца:
-\begin{equation}
+\textbf{В ковариантной форме (единым уравнением для 4-потенциала $A^\mu$):}
+\[
 \boxed{\Box A^\mu = \frac{4\pi}{c} j^\mu}
-\end{equation}
-
-где $\Box = \partial_\mu \partial^\mu = \frac{1}{c^2}\frac{\partial^2}{\partial t^2} - \Delta$ — оператор Даламбера.
-
-В 3-мерной форме:
-\begin{equation}
-\frac{1}{c^2}\frac{\partial^2 \varphi}{\partial t^2} - \Delta \varphi = 4\pi \rho
-\end{equation}
-\begin{equation}
-\frac{1}{c^2}\frac{\partial^2 \vec{A}}{\partial t^2} - \Delta \vec{A} = \frac{4\pi}{c} \vec{j}
-\end{equation}
-
+\]
 \section*{Задача 5. II пара уравнений Максвелла и проверка согласованности}
 
 \textbf{Условие:} Записать II пару уравнений Максвелла и проверить их согласованность с уравнением непрерывности.
